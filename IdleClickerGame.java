@@ -16,7 +16,7 @@ public class IdleClickerGame {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     //  UI Basics, Layout: ==========================================================================================================================================
-
+        //test
         int points = 0;
         int autoClickerLevel = 0;
         int autoClickerCost = 10;
