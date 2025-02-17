@@ -3,6 +3,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.Timer;
 
 // Idea: An Idle Game where the world was destroyed and now you need to rebuild it, by clicking on the screen.
 // Some reccources: https://machinations.io/articles/idle-games-and-how-to-design-them
@@ -48,7 +49,7 @@ public class IdleClickerGame {
            });
        
         //Button for autoClickerLabel         
-        JButton autoUpgradeButton = new JButton("Upgarde Autoclicker:");
+        JButton autoUpgradeButton = new JButton("Upgrade Autoclicker:");
         autoUpgradeButton.addActionListener(new ActionListener() {
            public void actionPerformed (ActionEvent e){
             gameLogic.incrementAuto();
@@ -62,6 +63,10 @@ public class IdleClickerGame {
                 gameLogic.upgradeClicker();
             }
         });
+
+     
+         
+
         
      
     // Panel ========================================================================================================================================================
@@ -89,10 +94,12 @@ public class IdleClickerGame {
     class GameLogic { //not public class, because per file there only can be one public class.
         
         int points = 0;
-        int autoClickerLevel = 0;
-        int autoClickerCost = 10;
+        int autoClickerLevel = 1;
+        int autoClickerCost = 100;
         int clickerLevel = 1;
         int clickerLevelCost = 10;
+        int upgradeCost = 10 * clickerLevel;
+
 
         private JLabel pointsLabel;
         private JLabel autoClickerLabel;
@@ -100,9 +107,12 @@ public class IdleClickerGame {
         private JLabel upgradeCostLabel;
         private JLabel upgradeAutoLabel;
 
+        private Timer autoClickTimer;
+        private boolean isAutoClickerRunning = false;
+
 
         // Constructor with all lables. As I understood it, it says that the lables we are using in this class GameLogic equals the labels form main
-        public GameLogic(JLabel pointsLabel, JLabel autoClickLabel, JLabel clickerLabel, JLabel upgradeCostLabel, JLabel upgradeAutoLabel) {
+        public GameLogic(JLabel pointsLabel, JLabel autoClickerLabel, JLabel clickerLabel, JLabel upgradeCostLabel, JLabel upgradeAutoLabel) {
             this.pointsLabel = pointsLabel;
             this.autoClickerLabel = autoClickerLabel;
             this.clickerLabel = clickerLabel;
@@ -111,6 +121,13 @@ public class IdleClickerGame {
             
             updateUpgradeCostLabel();
             updateUpgradeAutoLabel();
+
+                autoClickTimer = new Timer(1000 /*1000 ms equals 1 second*/ , new ActionListener() {
+                    public void actionPerformed (ActionEvent e){
+                    points += autoClickerLevel;
+                    updatePointsLabel();
+                    }
+                });
         }
 
         
@@ -125,8 +142,7 @@ public class IdleClickerGame {
 
         //Function Nr.2: Upgrade Clicker Button ============================================================================================== 
         
-        void upgradeClicker(){
-            int upgradeCost = 10 * clickerLevel;
+         void upgradeClicker(){
             if (points >= upgradeCost){
                 points -= upgradeCost;
                 clickerLevel++;
@@ -140,15 +156,31 @@ public class IdleClickerGame {
         }
 
         //Function Nr.3: Autoclicker ==========================================================================================================
-        public void incrementAuto (){
-
-
+        
+        void incrementAuto (){
+            if (points >= autoClickerCost){
+                points -= autoClickerCost;
+                autoClickerLevel++;
+                autoClickerCost*=2;
+                updatePointsLabel();
+                updateAutoClickerLabel();  
+                updateUpgradeAutoLabel();
+                
+                if (!isAutoClickerRunning){
+                    startAutoclicker();
+                    isAutoClickerRunning = true;
+                }
+            }
         }
 
-
+        void startAutoclicker(){
+        autoClickTimer.start();
+        }
+        
 
 
         // Methods to update the Labels =========================================================================================================
+
 
         void updatePointsLabel () {
             pointsLabel.setText("Points: " + points);
@@ -158,9 +190,12 @@ public class IdleClickerGame {
             clickerLabel.setText("Clicker level: " + clickerLevel);
         }
 
+        void updateAutoClickerLabel() {
+            autoClickerLabel.setText("Auto Clicker level: " + autoClickerLevel);
+        }
+
         private void updateUpgradeCostLabel() {
             upgradeCostLabel.setText("Clicker Upgrade Cost: " + clickerLevelCost);
-
         }
 
          private void updateUpgradeAutoLabel(){
