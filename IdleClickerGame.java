@@ -10,34 +10,97 @@ import java.awt.event.ActionListener;
 public class IdleClickerGame {
 
     public static void main(String[] args) {
-
+        
+        // Frame creation 
         JFrame frame = new JFrame("Idle Armageddon");
         frame.setSize(500, 500);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+
         // UI Basics, Defining all Labels, Buttons and Timers:
         // ==========================================================================================================================================
+       
+    /* structure of the UI 
 
+    mainPanel (BorderLayout)
+    │
+    ├── gifLabel (NORTH) → picture above 
+    │
+    └── bottomPanel (CENTER) → contains three parts:
+        ├── leftPanel → Click-Button & Points
+        ├── centerPanel → Clicker-Upgrade
+        ├── rightPanel → AutoClicker-Upgrade
+    */
+        
+        // mainPanel
+        JPanel mainPanel = new JPanel(new BorderLayout());
+
+            //gifLabel
+        ImageIcon gifIcon = new ImageIcon("c:\\Users\\Christian Schellhorn\\Dropbox\\Mein PC (DESKTOP-0JAOGE8)\\Desktop\\SideProjectIdleGame\\original-b89427a424892a34512fe8249396c0f8-ezgif.com-speed.gif");
+        JLabel gifLabel = new JLabel(gifIcon);
+        mainPanel.add(gifLabel, BorderLayout.NORTH);
+
+        
+            // bottomPanel
+        JPanel bottomPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5); // Padding
+
+                // LeftPanel
+        JPanel leftPanel = new JPanel();
+        leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
         JLabel pointsLabel = new JLabel("Points: 0");
-        pointsLabel.setBorder(new EmptyBorder(0, 10, 0, 0));// (top, left, bottom right)
+        JButton clickButton = new JButton("Click me!");
+        JLabel bossHealthLabel = new JLabel("Health: ");
 
+        leftPanel.add(clickButton);
+        leftPanel.add(pointsLabel);
+        leftPanel.add(bossHealthLabel);
+
+                // centerPanel
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+        JLabel clickerLabel = new JLabel("Clicker Level: 1");
+        JLabel upgradeCostLabel = new JLabel("Upgrade Cost: 10");
+        JButton clickerUpgradeButton = new JButton("Upgrade Clicker");
+        centerPanel.add(clickerUpgradeButton);
+        centerPanel.add(clickerLabel);
+        centerPanel.add(upgradeCostLabel);
+
+                // RightPanel
+        JPanel rightPanel = new JPanel();
+        rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
         JLabel autoClickerLabel = new JLabel("Autoclicker Level: 0");
-        autoClickerLabel.setBorder(new EmptyBorder(0, 10, 0, 0));// (top, left, bottom right)
+        JLabel upgradeAutoLabel = new JLabel("Upgrade Cost: 100");
+        JButton autoUpgradeButton = new JButton("Upgrade Autoclicker");
+        rightPanel.add(autoUpgradeButton);
+        rightPanel.add(autoClickerLabel);
+        rightPanel.add(upgradeAutoLabel);
 
-        JLabel clickerLabel = new JLabel("Clicker Level: 0");
-        clickerLabel.setBorder(new EmptyBorder(0, 10, 0, 0));// (top, left, bottom right)
 
-        JLabel upgradeCostLabel = new JLabel("Clicker Upgrade Cost: 10");
-        upgradeCostLabel.setBorder(new EmptyBorder(0, 10, 0, 0));// (top, left, bottom right)
+        // Add panels to the bottom panel
+        gbc.gridx = 0; // first position left
+        gbc.gridy = 0;
+        bottomPanel.add(leftPanel, gbc);
 
-        JLabel upgradeAutoLabel = new JLabel("Auto Clicker Upgrade Cost: 100");
-        upgradeAutoLabel.setBorder(new EmptyBorder(0, 10, 0, 0));// (top, left, bottom right)
+        gbc.gridx = 1; //center position
+        gbc.gridy = 0;
+        bottomPanel.add(centerPanel, gbc);
+
+        gbc.gridx = 2; // right position
+        gbc.gridy = 0;
+        bottomPanel.add(rightPanel, gbc);
+
+        mainPanel.add(bottomPanel, BorderLayout.CENTER);
+
+        frame.add(mainPanel);
+        frame.setVisible(true);
+
 
         GameLogic gameLogic = new GameLogic(pointsLabel, autoClickerLabel, clickerLabel, upgradeCostLabel,
-                upgradeAutoLabel);
+                upgradeAutoLabel, bossHealthLabel);
 
         // Button for pointsLabel
-        JButton clickButton = new JButton("Clicke me!");
         clickButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 gameLogic.incrementPoints();
@@ -45,7 +108,6 @@ public class IdleClickerGame {
         });
 
         // Button for autoClickerLabel
-        JButton autoUpgradeButton = new JButton("Upgrade Autoclicker:");
         autoUpgradeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 gameLogic.incrementAuto();
@@ -53,29 +115,14 @@ public class IdleClickerGame {
         });
 
         // Button for clickerLabel
-        JButton clickerUpgradeButton = new JButton("Upgrade Clicker");
         clickerUpgradeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 gameLogic.upgradeClicker();
             }
         });
 
-        // Panel
-        // ========================================================================================================================================================
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.add(pointsLabel);
-        panel.add(clickButton);
-        panel.add(clickerLabel);
-        panel.add(upgradeCostLabel);
-        panel.add(clickerUpgradeButton);
-        panel.add(autoClickerLabel);
-        panel.add(upgradeAutoLabel);
-        panel.add(autoUpgradeButton);
 
-        frame.add(panel);
-        frame.setVisible(true);
     }
 }
 
@@ -85,16 +132,20 @@ public class IdleClickerGame {
 class GameLogic { // not public class, because per file there only can be one public class.
 
     int points = 0;
-    int autoClickerLevel = 1;
+    int autoClickerLevel = 0;
     int autoClickerCost = 100;
     int clickerLevel = 1;
     int upgradeCost = 10 * clickerLevel;
+    int bossHealth = 200;
+    int bossLevel =1;
 
     private JLabel pointsLabel;
     private JLabel autoClickerLabel;
     private JLabel clickerLabel;
     private JLabel upgradeCostLabel;
     private JLabel upgradeAutoLabel;
+    private JLabel bossHealthLabel;
+    
 
     private Timer autoClickTimer;
     private boolean isAutoClickerRunning = false;
@@ -102,12 +153,13 @@ class GameLogic { // not public class, because per file there only can be one pu
     // Constructor with all lables. As I understood it, it says that the lables we
     // are using in this class GameLogic equals the labels form main
     public GameLogic(JLabel pointsLabel, JLabel autoClickerLabel, JLabel clickerLabel, JLabel upgradeCostLabel,
-            JLabel upgradeAutoLabel) {
+            JLabel upgradeAutoLabel, JLabel bossHealthLabel) {
         this.pointsLabel = pointsLabel;
         this.autoClickerLabel = autoClickerLabel;
         this.clickerLabel = clickerLabel;
         this.upgradeCostLabel = upgradeCostLabel;
         this.upgradeAutoLabel = upgradeAutoLabel;
+        this.bossHealthLabel = bossHealthLabel;
 
         updateUpgradeCostLabel();
         updateUpgradeAutoLabel();
@@ -125,7 +177,8 @@ class GameLogic { // not public class, because per file there only can be one pu
 
     void incrementPoints() {
         points += clickerLevel;// + clicker level, so that if the clicker level is upgraded, you get twice as
-                               // many points
+        bossHealth = bossHealth - clickerLevel;
+        updateBossHealth();                        // many points
         updatePointsLabel();
     }
 
@@ -137,7 +190,7 @@ class GameLogic { // not public class, because per file there only can be one pu
             points -= upgradeCost;
             clickerLevel++;
 
-            upgradeCost = 10 * clickerLevel;
+            upgradeCost *= 2 ;
 
             updatePointsLabel();
             updateClickerLabel();
@@ -168,8 +221,21 @@ class GameLogic { // not public class, because per file there only can be one pu
         autoClickTimer.start();
     }
 
+
+
+
+
+
+
+
+
+
     // Methods to update the Labels
     // =========================================================================================================
+
+    void updateBossHealth(){
+        bossHealthLabel.setText("Health: " + (bossHealth- points));
+    }
 
     void updatePointsLabel() {
         pointsLabel.setText("Points: " + points);
@@ -184,10 +250,10 @@ class GameLogic { // not public class, because per file there only can be one pu
     }
 
     private void updateUpgradeCostLabel() {
-        upgradeCostLabel.setText("Clicker Upgrade Cost: " + upgradeCost);
+        upgradeCostLabel.setText("Upgrade Cost: " + upgradeCost);
     }
 
     private void updateUpgradeAutoLabel() {
-        upgradeAutoLabel.setText("Auto Clicker Upgrade Cost: " + autoClickerCost);
+        upgradeAutoLabel.setText("Upgrade Cost: " + autoClickerCost);
     }
 }
