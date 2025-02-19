@@ -6,18 +6,22 @@ import javafx.scene.layout.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 
 // Idea: An Idle Game where the world was destroyed and now you need to rebuild it, by clicking on the screen.
 // Some reccources: https://machinations.io/articles/idle-games-and-how-to-design-them
 
 public class IdleClickerGame {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FontFormatException, IOException {
         
         // Frame creation 
         JFrame frame = new JFrame("Idle Armageddon");
         frame.setSize(1920, 1080);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        Font pixelifyFont = Font.createFont(Font.TRUETYPE_FONT, new File("c:\\Users\\Christian Schellhorn\\Dropbox\\Mein PC (DESKTOP-0JAOGE8)\\Desktop\\SideProjectIdleGame\\PixelifySans-VariableFont_wght.ttf")).deriveFont(24f);
+
 
 
         // UI Basics, Defining all Labels, Buttons and Timers:
@@ -51,8 +55,12 @@ public class IdleClickerGame {
 
 
         JLabel bossLevel = new JLabel("Boss level: 1");
+        bossLevel.setFont(pixelifyFont);
 
-        JLabel bossHealthLabel = new JLabel("❤️Health: 20");
+
+        JLabel bossHealthLabel = new JLabel("Health: 20");
+        bossHealthLabel.setFont(pixelifyFont);
+
 
 
         topPanel.add(bossLevel);
@@ -73,8 +81,12 @@ public class IdleClickerGame {
         leftPanel.setBorder(BorderFactory.createEmptyBorder(40, 50, 50, 10)); // Padding
 
         JLabel pointsLabel = new JLabel("Money: 0");
+        pointsLabel.setFont(pixelifyFont);
+
         JButton clickButton = new JButton("Fight!");
-        clickButton.setMargin(new Insets(50, 500, 50, 462)); // Oben, Links, Unten, Rechts
+        clickButton.setMargin(new Insets(50, 500, 50, 425)); // Oben, Links, Unten, Rechts
+        clickButton.setFont(pixelifyFont);
+
 
 
 
@@ -87,10 +99,15 @@ public class IdleClickerGame {
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         JLabel clickerLabel = new JLabel("Clicker Level: 1");
+        clickerLabel.setFont(pixelifyFont);
         JLabel upgradeOptionsLabel = new JLabel("Upgrade your skills!");
+        upgradeOptionsLabel.setFont(pixelifyFont);
         JLabel upgradeCostLabel = new JLabel("Upgrade Cost: 10");
+        upgradeCostLabel.setFont(pixelifyFont);
         JButton clickerUpgradeButton = new JButton("Upgrade Clicker");
         clickerUpgradeButton.setMargin(new Insets(50, 200, 50, 200)); // Oben, Links, Unten, Rechts
+        clickerUpgradeButton.setFont(pixelifyFont);
+
 
         centerPanel.add(upgradeOptionsLabel);
         centerPanel.add(Box.createRigidArea(new Dimension(0, 50))); // 20px vertikaler Abstand
@@ -109,9 +126,13 @@ public class IdleClickerGame {
         JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
         JLabel autoClickerLabel = new JLabel("Autoclicker Level: 0");
+        autoClickerLabel.setFont(pixelifyFont);
         JLabel upgradeAutoLabel = new JLabel("Upgrade Cost: 100");
+        upgradeAutoLabel.setFont(pixelifyFont);
         JButton autoUpgradeButton = new JButton("Upgrade Autoclicker");
-        autoUpgradeButton.setMargin(new Insets(50, 200, 50, 200)); // Oben, Links, Unten, Rechts
+        autoUpgradeButton.setMargin(new Insets(50, 200, 50, 150)); // Oben, Links, Unten, Rechts
+        autoUpgradeButton.setFont(pixelifyFont);
+
 
 
         rightPanel.add(autoUpgradeButton);
@@ -282,7 +303,7 @@ class GameLogic { // not public class, because per file there only can be one pu
 
 
     void updateBossHealth(){
-        bossHealthLabel.setText("❤️Health: " + bossHealth);
+        bossHealthLabel.setText("Health: " + bossHealth);
     }
 
     void updatePointsLabel() {
