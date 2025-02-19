@@ -41,21 +41,18 @@ public class IdleClickerGame {
         //topPanel
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
-        topPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Abstand vom Rand
+        topPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 10, 10)); // Abstand vom Rand
 
 
 
             //gifLabel
         ImageIcon gifIcon = new ImageIcon("c:\\Users\\Christian Schellhorn\\Dropbox\\Mein PC (DESKTOP-0JAOGE8)\\Desktop\\SideProjectIdleGame\\original-b89427a424892a34512fe8249396c0f8-ezgif.com-speed.gif");
         JLabel gifLabel = new JLabel(gifIcon);
-        gifLabel.setAlignmentX(Component.LEFT_ALIGNMENT); // Zentrieren
 
 
         JLabel bossLevel = new JLabel("Boss level: 1");
-        bossLevel.setAlignmentX(Component.LEFT_ALIGNMENT); // Zentrieren
 
         JLabel bossHealthLabel = new JLabel("❤️Health: 20");
-        bossHealthLabel.setAlignmentX(Component.LEFT_ALIGNMENT); // Zentrieren
 
 
         topPanel.add(bossLevel);
@@ -64,16 +61,21 @@ public class IdleClickerGame {
         topPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         topPanel.add(gifLabel);
         
-            // right Panel
+            // upgrade Panel
         JPanel upgradeComponent = new JPanel(new BorderLayout());
-        upgradeComponent.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Padding
+        upgradeComponent.setLayout(new BoxLayout(upgradeComponent, BoxLayout.Y_AXIS));
+
+        upgradeComponent.setBorder(BorderFactory.createEmptyBorder(100, 10, 10, 100)); // Padding
 
                 // LeftPanel
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
+        leftPanel.setBorder(BorderFactory.createEmptyBorder(40, 50, 50, 10)); // Padding
+
         JLabel pointsLabel = new JLabel("Money: 0");
         JButton clickButton = new JButton("Fight!");
-        clickButton.setMargin(new Insets(50, 425, 50, 425)); // Oben, Links, Unten, Rechts
+        clickButton.setMargin(new Insets(50, 500, 50, 462)); // Oben, Links, Unten, Rechts
+
 
 
         leftPanel.add(clickButton);
@@ -85,20 +87,22 @@ public class IdleClickerGame {
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         JLabel clickerLabel = new JLabel("Clicker Level: 1");
+        JLabel upgradeOptionsLabel = new JLabel("Upgrade your skills!");
         JLabel upgradeCostLabel = new JLabel("Upgrade Cost: 10");
         JButton clickerUpgradeButton = new JButton("Upgrade Clicker");
-        clickerUpgradeButton.setMargin(new Insets(100, 200, 100, 200)); // Oben, Links, Unten, Rechts
+        clickerUpgradeButton.setMargin(new Insets(50, 200, 50, 200)); // Oben, Links, Unten, Rechts
 
-
+        centerPanel.add(upgradeOptionsLabel);
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 50))); // 20px vertikaler Abstand
 
         centerPanel.add(clickerUpgradeButton);
-        centerPanel.add(Box.createRigidArea(new Dimension(0, 10))); // 20px vertikaler Abstand
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 25))); // 20px vertikaler Abstand
 
         centerPanel.add(clickerLabel);
-        centerPanel.add(Box.createRigidArea(new Dimension(0, 10))); // 20px vertikaler Abstand
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 25))); // 20px vertikaler Abstand
 
         centerPanel.add(upgradeCostLabel);
-        centerPanel.add(Box.createRigidArea(new Dimension(0, 10))); // 20px vertikaler Abstand
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 25))); // 20px vertikaler Abstand
 
 
                 // RightPanel
@@ -107,24 +111,25 @@ public class IdleClickerGame {
         JLabel autoClickerLabel = new JLabel("Autoclicker Level: 0");
         JLabel upgradeAutoLabel = new JLabel("Upgrade Cost: 100");
         JButton autoUpgradeButton = new JButton("Upgrade Autoclicker");
+        autoUpgradeButton.setMargin(new Insets(50, 200, 50, 200)); // Oben, Links, Unten, Rechts
+
 
         rightPanel.add(autoUpgradeButton);
-        rightPanel.add(Box.createRigidArea(new Dimension(0, 10))); // 20px vertikaler Abstand
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 25))); // 20px vertikaler Abstand
 
         rightPanel.add(autoClickerLabel);
-        rightPanel.add(Box.createRigidArea(new Dimension(0, 10))); // 20px vertikaler Abstand
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 25))); // 20px vertikaler Abstand
 
         rightPanel.add(upgradeAutoLabel);
-        rightPanel.add(Box.createRigidArea(new Dimension(0, 10))); // 20px vertikaler Abstand
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 25))); // 20px vertikaler Abstand
 
         
-        upgradeComponent.add(centerPanel);
-        upgradeComponent.add(Box.createRigidArea(new Dimension(0, 20))); // Spacing
-        upgradeComponent.add(rightPanel, BorderLayout.NORTH);
+        upgradeComponent.add(centerPanel, BorderLayout.CENTER);
+        upgradeComponent.add(rightPanel, BorderLayout.EAST);
        
 
-        mainPanel.add(topPanel, BorderLayout.NORTH);
-        mainPanel.add(leftPanel, BorderLayout.WEST);
+        mainPanel.add(topPanel, BorderLayout.WEST);
+        mainPanel.add(leftPanel, BorderLayout.SOUTH);
         mainPanel.add(upgradeComponent, BorderLayout.EAST);
     
 
