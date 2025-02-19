@@ -1,17 +1,14 @@
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
+import javafx.scene.layout.Border;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 // Idea: An Idle Game where the world was destroyed and now you need to rebuild it, by clicking on the screen.
 // Some reccources: https://machinations.io/articles/idle-games-and-how-to-design-them
-
-/*To-Do-List:
- * 1. Health Bar soll funktionieren 
- *  1.2. Autocklicker soll auch als Schaden gezaehlt werden
- * 2. Wenn der Boss stirbt, soll ein neues Bossbild kommen
- */
 
 public class IdleClickerGame {
 
@@ -49,16 +46,16 @@ public class IdleClickerGame {
 
 
             //gifLabel
-        ImageIcon gifIcon = new ImageIcon("c:\\\\Users\\\\Christian Schellhorn\\\\Dropbox\\\\Mein PC (DESKTOP-0JAOGE8)\\\\Desktop\\\\SideProjectIdleGame\\\\original-fd5e25a0ac83d1fcd66568748fa32095-ezgif.com-speed.gif");
+        ImageIcon gifIcon = new ImageIcon("c:\\Users\\Christian Schellhorn\\Dropbox\\Mein PC (DESKTOP-0JAOGE8)\\Desktop\\SideProjectIdleGame\\original-b89427a424892a34512fe8249396c0f8-ezgif.com-speed.gif");
         JLabel gifLabel = new JLabel(gifIcon);
-        gifLabel.setAlignmentX(Component.CENTER_ALIGNMENT); // Zentrieren
+        gifLabel.setAlignmentX(Component.LEFT_ALIGNMENT); // Zentrieren
 
 
         JLabel bossLevel = new JLabel("Boss level: 1");
-        bossLevel.setAlignmentX(Component.CENTER_ALIGNMENT); // Zentrieren
+        bossLevel.setAlignmentX(Component.LEFT_ALIGNMENT); // Zentrieren
 
         JLabel bossHealthLabel = new JLabel("❤️Health: 20");
-        bossHealthLabel.setAlignmentX(Component.CENTER_ALIGNMENT); // Zentrieren
+        bossHealthLabel.setAlignmentX(Component.LEFT_ALIGNMENT); // Zentrieren
 
 
         topPanel.add(bossLevel);
@@ -67,24 +64,22 @@ public class IdleClickerGame {
         topPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         topPanel.add(gifLabel);
         
-            // bottomPanel
-        JPanel bottomPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10); // Padding
+            // right Panel
+        JPanel upgradeComponent = new JPanel(new BorderLayout());
+        upgradeComponent.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Padding
 
                 // LeftPanel
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
-        JLabel pointsLabel = new JLabel("Points: 0");
+        JLabel pointsLabel = new JLabel("Money: 0");
         JButton clickButton = new JButton("Fight!");
-        clickButton.setMargin(new Insets(75, 250, 75, 250)); // Oben, Links, Unten, Rechts
+        clickButton.setMargin(new Insets(50, 425, 50, 425)); // Oben, Links, Unten, Rechts
 
 
         leftPanel.add(clickButton);
         leftPanel.add(Box.createRigidArea(new Dimension(0, 10))); // 20px vertikaler Abstand
 
         leftPanel.add(pointsLabel);
-        leftPanel.add(Box.createRigidArea(new Dimension(0, 10))); // 20px vertikaler Abstand
 
                 // centerPanel
         JPanel centerPanel = new JPanel();
@@ -93,6 +88,7 @@ public class IdleClickerGame {
         JLabel upgradeCostLabel = new JLabel("Upgrade Cost: 10");
         JButton clickerUpgradeButton = new JButton("Upgrade Clicker");
         clickerUpgradeButton.setMargin(new Insets(100, 200, 100, 200)); // Oben, Links, Unten, Rechts
+
 
 
         centerPanel.add(clickerUpgradeButton);
@@ -122,22 +118,15 @@ public class IdleClickerGame {
         rightPanel.add(Box.createRigidArea(new Dimension(0, 10))); // 20px vertikaler Abstand
 
         
-
-        // Add panels to the bottom panel
-        gbc.gridx = 0; // first position left
-        gbc.gridy = 0;
-        bottomPanel.add(leftPanel, gbc);
-
-        gbc.gridx = 1; //center position
-        gbc.gridy = 0;
-        bottomPanel.add(centerPanel, gbc);
-
-        gbc.gridx = 2; // right position
-        gbc.gridy = 0;
-        bottomPanel.add(rightPanel, gbc);
+        upgradeComponent.add(centerPanel);
+        upgradeComponent.add(Box.createRigidArea(new Dimension(0, 20))); // Spacing
+        upgradeComponent.add(rightPanel, BorderLayout.NORTH);
+       
 
         mainPanel.add(topPanel, BorderLayout.NORTH);
-        mainPanel.add(bottomPanel, BorderLayout.CENTER);
+        mainPanel.add(leftPanel, BorderLayout.WEST);
+        mainPanel.add(upgradeComponent, BorderLayout.EAST);
+    
 
 
         frame.add(mainPanel);
@@ -292,7 +281,7 @@ class GameLogic { // not public class, because per file there only can be one pu
     }
 
     void updatePointsLabel() {
-        pointsLabel.setText("Points: " + points);
+        pointsLabel.setText("Money: " + points);
     }
 
     void updateClickerLabel() {
