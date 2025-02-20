@@ -1,8 +1,4 @@
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-
-import javafx.scene.layout.Border;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,17 +7,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 // Idea: An Idle Game where the world was destroyed and now you need to rebuild it, by clicking on the screen.
-// Some reccources: https://machinations.io/articles/idle-games-and-how-to-design-them
 
 public class IdleClickerGame {
+
+
+
 
     private static ArrayList<ImageIcon> monsterGifs = new ArrayList<>();
     private static int currentGifIndex = 0;
 
     private static void loadMonsterGifs() {
     for (int i = 1; i <= 12; i++) {  // Falls deine Dateien "monster1.gif", "monster2.gif" usw. heißen
-        String path = "c:\\Users\\Christian Schellhorn\\Dropbox\\Mein PC (DESKTOP-0JAOGE8)\\Desktop\\SideProjectIdleGame\\Monster 1000 x 750 idle animation\\Monster" + i + ".gif";
-        monsterGifs.add(new ImageIcon(path));
+        String path = "resources/gifs/Monster" +i +".gif";
+        monsterGifs.add(new ImageIcon((path)));
     }
 
     }
@@ -29,10 +27,12 @@ public class IdleClickerGame {
     public static void main(String[] args) throws FontFormatException, IOException {
         
         // Frame creation 
-        JFrame frame = new JFrame("Idle Armageddon");
+        JFrame frame = new JFrame("Idle MonsterHunter");
         frame.setSize(1920, 1080);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Font pixelifyFont = Font.createFont(Font.TRUETYPE_FONT, new File("c:\\Users\\Christian Schellhorn\\Dropbox\\Mein PC (DESKTOP-0JAOGE8)\\Desktop\\SideProjectIdleGame\\PixelifySans-VariableFont_wght.ttf")).deriveFont(24f);
+
+       
+        Font pixelifyFont = Font.createFont(Font.TRUETYPE_FONT, new File ("resources/font/PixelifySans-VariableFont_wght.ttf")).deriveFont(24f);
 
         
 
