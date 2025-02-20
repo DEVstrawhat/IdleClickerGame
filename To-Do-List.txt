@@ -2,10 +2,8 @@ To-Do-List:
 
 1. Visual Changes  
     1.1  set a backgroundpicture 
-    1.2  implement the death animation
 
 2. Functionality 
-    2.1 Add Monster Music to the game 
     2.2 Add effects to the game 
         2.2.1 If a monster is hit
         2.2.2. If you upgrade something 
