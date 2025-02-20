@@ -13,12 +13,16 @@ public class IdleClickerGame {
 
 
     private static ArrayList<ImageIcon> monsterGifs = new ArrayList<>();
+    private static ArrayList<ImageIcon> monsterDeathGifs = new ArrayList<>();
     private static int currentGifIndex = 0;
 
     private static void loadMonsterGifs() {
-    for (int i = 1; i <= 12; i++) {  // Falls deine Dateien "monster1.gif", "monster2.gif" usw. heißen
+    for (int i = 1; i <= 9; i++) {  // Falls deine Dateien "monster1.gif", "monster2.gif" usw. heißen
         String path = "resources/gifs/Monster" +i +".gif";
+        String deathpath = "resources/deathgifs/Monster" +i +".gif";
+
         monsterGifs.add(new ImageIcon((path)));
+        monsterDeathGifs.add(new ImageIcon((deathpath)));
     }
 
     }
@@ -29,6 +33,9 @@ public class IdleClickerGame {
         JFrame frame = new JFrame("Idle MonsterHunter");
         frame.setSize(1920, 1080);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //Background music
+    MusicPlayer musicPlayer = new MusicPlayer();
+    musicPlayer.playMusic("dungeonBeat.wav");
         //Font
         Font pixelifyFont = Font.createFont(Font.TRUETYPE_FONT, new File ("resources/font/PixelifySans-VariableFont_wght.ttf")).deriveFont(24f);  
 
@@ -61,6 +68,8 @@ public class IdleClickerGame {
         loadMonsterGifs();
         ImageIcon gifIcon = monsterGifs.get(currentGifIndex);
         JLabel gifLabel = new JLabel(gifIcon);
+        ImageIcon deathGifIcon = monsterDeathGifs.get(currentGifIndex);
+        JLabel deathGifLabel = new JLabel(deathGifIcon);
         JLabel bossLevel = new JLabel("Boss level: 1");
         bossLevel.setFont(pixelifyFont);
         JLabel bossHealthLabel = new JLabel("Health: 20");
@@ -148,7 +157,7 @@ public class IdleClickerGame {
         frame.setVisible(true);
 
         GameLogic gameLogic = new GameLogic(pointsLabel, autoClickerLabel, clickerLabel, upgradeCostLabel,
-        upgradeAutoLabel, bossHealthLabel, bossLevel, gifLabel, monsterGifs);
+        upgradeAutoLabel, bossHealthLabel, bossLevel, gifLabel, deathGifLabel, monsterGifs, monsterDeathGifs);
 
 
         // Buttons =====================================================================================================================================
@@ -184,7 +193,7 @@ class GameLogic { // not public class, because per file there only can be one pu
     int upgradeCost = 10 * clickerLevel;
     int bossHealth = 20;
     int bossLevelInt = 1;
-    int currentGifIndex =1;
+    int currentGifIndex =0;
     private JLabel pointsLabel;
     private JLabel autoClickerLabel;
     private JLabel clickerLabel;
@@ -193,8 +202,12 @@ class GameLogic { // not public class, because per file there only can be one pu
     private JLabel bossHealthLabel;
     private JLabel bossLevel;
     private JLabel gifLabel;
+    private JLabel deathGifLabel;
+    private boolean isDeathAnimationActive = false; 
+
 
     ArrayList <ImageIcon> monsterGifs;
+    ArrayList <ImageIcon> monsterDeathGifs;
     
 
     private Timer autoClickTimer;
@@ -203,7 +216,7 @@ class GameLogic { // not public class, because per file there only can be one pu
     // Constructor with all lables. As I understood it, it says that the lables we
     // are using in this class GameLogic equals the labels form main
     public GameLogic(JLabel pointsLabel, JLabel autoClickerLabel, JLabel clickerLabel, JLabel upgradeCostLabel,
-            JLabel upgradeAutoLabel, JLabel bossHealthLabel, JLabel bossLevel, JLabel gifLabel, ArrayList<ImageIcon> monsterGifs) {
+            JLabel upgradeAutoLabel, JLabel bossHealthLabel, JLabel bossLevel, JLabel gifLabel, JLabel deathGifLabel, ArrayList<ImageIcon> monsterGifs, ArrayList<ImageIcon> monsterDeathGifs) {
         this.pointsLabel = pointsLabel;
         this.autoClickerLabel = autoClickerLabel;
         this.clickerLabel = clickerLabel;
@@ -212,7 +225,9 @@ class GameLogic { // not public class, because per file there only can be one pu
         this.bossHealthLabel = bossHealthLabel;
         this.bossLevel = bossLevel;
         this.gifLabel = gifLabel;
+        this.deathGifLabel = deathGifLabel;
         this.monsterGifs = monsterGifs;
+        this.monsterDeathGifs = monsterDeathGifs;
 
         updateUpgradeCostLabel();
         updateUpgradeAutoLabel();
@@ -231,10 +246,12 @@ class GameLogic { // not public class, because per file there only can be one pu
     // ===================================================================================================
 
     void incrementPoints() {
+        if (bossHealth > 0) { 
         bossHealth = bossHealth - clickerLevel;
         checkBossHealth();
         updateBossHealth();                        
     }
+}
 
     // Function Nr.2: Upgrade Clicker Button
     // ==============================================================================================
@@ -275,7 +292,7 @@ class GameLogic { // not public class, because per file there only can be one pu
         autoClickTimer.start();
     }
 
-    
+
     // Methods to update the Labels
     // =========================================================================================================
     void updateBossLevel(){
@@ -308,23 +325,37 @@ class GameLogic { // not public class, because per file there only can be one pu
     }
     
     private void checkBossHealth(){
-    if (bossHealth <= 0){
-        bossHealth =0;
-        updateBossHealth();
-        bossLevelInt++;
-        bossHealth = 20 * bossLevelInt;
-        updateBossLevel();
-        points += 10 * bossLevelInt;
-        updatePointsLabel();
 
-        // loop for the monstergifs 
-        if (currentGifIndex < monsterGifs.size() - 1){
-            currentGifIndex ++;
-        }else {
-            currentGifIndex = 0;
+        if (bossHealth <= 0 && !isDeathAnimationActive) {
+                bossHealth = 0;
+                updateBossHealth();
+                isDeathAnimationActive = true;
+        
+                gifLabel.setIcon(monsterDeathGifs.get(currentGifIndex));
+        
+                Timer deathTimer = new Timer(1000, new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+
+                        bossLevelInt++;
+                        bossHealth = 20 * bossLevelInt;
+                        updateBossLevel();
+                        points += 10 * bossLevelInt;
+                        updatePointsLabel();
+                        updateBossHealth();
+                        
+        
+                        currentGifIndex = (currentGifIndex + 1) % monsterGifs.size();
+                        gifLabel.setIcon(monsterGifs.get(currentGifIndex));
+                        isDeathAnimationActive = false;
+
+                    }
+                });
+                deathTimer.setRepeats(false); // Timer soll nur einmal ausgeführt werden
+                deathTimer.start();
+            }
         }
-        gifLabel.setIcon(monsterGifs.get(currentGifIndex));
-
+        
     }
-}
-}
+
+
