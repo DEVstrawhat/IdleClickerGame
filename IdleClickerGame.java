@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+
+//Test
 // Idea: An Idle Game where the world was destroyed and now you need to rebuild it, by clicking on the screen.
 
 public class IdleClickerGame {
