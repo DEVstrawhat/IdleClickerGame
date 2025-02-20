@@ -8,11 +8,23 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 // Idea: An Idle Game where the world was destroyed and now you need to rebuild it, by clicking on the screen.
 // Some reccources: https://machinations.io/articles/idle-games-and-how-to-design-them
 
 public class IdleClickerGame {
+
+    private static ArrayList<ImageIcon> monsterGifs = new ArrayList<>();
+    private static int currentGifIndex = 0;
+
+    private static void loadMonsterGifs() {
+    for (int i = 1; i <= 12; i++) {  // Falls deine Dateien "monster1.gif", "monster2.gif" usw. heißen
+        String path = "c:\\Users\\Christian Schellhorn\\Dropbox\\Mein PC (DESKTOP-0JAOGE8)\\Desktop\\SideProjectIdleGame\\Monster 1000 x 750 idle animation\\Monster" + i + ".gif";
+        monsterGifs.add(new ImageIcon(path));
+    }
+
+    }
 
     public static void main(String[] args) throws FontFormatException, IOException {
         
@@ -22,6 +34,9 @@ public class IdleClickerGame {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Font pixelifyFont = Font.createFont(Font.TRUETYPE_FONT, new File("c:\\Users\\Christian Schellhorn\\Dropbox\\Mein PC (DESKTOP-0JAOGE8)\\Desktop\\SideProjectIdleGame\\PixelifySans-VariableFont_wght.ttf")).deriveFont(24f);
 
+        
+
+    
 
 
         // UI Basics, Defining all Labels, Buttons and Timers:
@@ -50,7 +65,8 @@ public class IdleClickerGame {
 
 
             //gifLabel
-        ImageIcon gifIcon = new ImageIcon("c:\\Users\\Christian Schellhorn\\Dropbox\\Mein PC (DESKTOP-0JAOGE8)\\Desktop\\SideProjectIdleGame\\Myur800px-1.gif");
+        loadMonsterGifs();
+        ImageIcon gifIcon = monsterGifs.get(currentGifIndex);
         JLabel gifLabel = new JLabel(gifIcon);
 
 
@@ -160,7 +176,7 @@ public class IdleClickerGame {
 
 
         GameLogic gameLogic = new GameLogic(pointsLabel, autoClickerLabel, clickerLabel, upgradeCostLabel,
-                upgradeAutoLabel, bossHealthLabel, bossLevel);
+                upgradeAutoLabel, bossHealthLabel, bossLevel, gifLabel, monsterGifs);
 
         // Button for pointsLabel
         clickButton.addActionListener(new ActionListener() {
@@ -200,6 +216,7 @@ class GameLogic { // not public class, because per file there only can be one pu
     int upgradeCost = 10 * clickerLevel;
     int bossHealth = 20;
     int bossLevelInt = 1;
+    int currentGifIndex =1;
     private JLabel pointsLabel;
     private JLabel autoClickerLabel;
     private JLabel clickerLabel;
@@ -207,6 +224,9 @@ class GameLogic { // not public class, because per file there only can be one pu
     private JLabel upgradeAutoLabel;
     private JLabel bossHealthLabel;
     private JLabel bossLevel;
+    private JLabel gifLabel;
+
+    ArrayList <ImageIcon> monsterGifs;
     
 
     private Timer autoClickTimer;
@@ -215,7 +235,7 @@ class GameLogic { // not public class, because per file there only can be one pu
     // Constructor with all lables. As I understood it, it says that the lables we
     // are using in this class GameLogic equals the labels form main
     public GameLogic(JLabel pointsLabel, JLabel autoClickerLabel, JLabel clickerLabel, JLabel upgradeCostLabel,
-            JLabel upgradeAutoLabel, JLabel bossHealthLabel, JLabel bossLevel) {
+            JLabel upgradeAutoLabel, JLabel bossHealthLabel, JLabel bossLevel, JLabel gifLabel, ArrayList<ImageIcon> monsterGifs) {
         this.pointsLabel = pointsLabel;
         this.autoClickerLabel = autoClickerLabel;
         this.clickerLabel = clickerLabel;
@@ -223,6 +243,8 @@ class GameLogic { // not public class, because per file there only can be one pu
         this.upgradeAutoLabel = upgradeAutoLabel;
         this.bossHealthLabel = bossHealthLabel;
         this.bossLevel = bossLevel;
+        this.gifLabel = gifLabel;
+        this.monsterGifs = monsterGifs;
 
         updateUpgradeCostLabel();
         updateUpgradeAutoLabel();
@@ -244,7 +266,6 @@ class GameLogic { // not public class, because per file there only can be one pu
         bossHealth = bossHealth - clickerLevel;
         checkBossHealth();
         updateBossHealth();                        
-        updatePointsLabel();
     }
 
     // Function Nr.2: Upgrade Clicker Button
@@ -335,6 +356,14 @@ class GameLogic { // not public class, because per file there only can be one pu
         updateBossLevel();
         points += 10 * bossLevelInt;
         updatePointsLabel();
+
+        // loop for the monstergifs 
+        if (currentGifIndex < monsterGifs.size() - 1){
+            currentGifIndex ++;
+        }else {
+            currentGifIndex = 0;
+        }
+        gifLabel.setIcon(monsterGifs.get(currentGifIndex));
 
     }
 }
