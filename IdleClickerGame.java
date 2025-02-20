@@ -16,7 +16,7 @@ public class IdleClickerGame {
 
     private static void loadMonsterGifs() {
     for (int i = 1; i <= 12; i++) {  // Falls deine Dateien "monster1.gif", "monster2.gif" usw. heißen
-        String path = "SideProjectIdleGame/resources/gifs/Monster" +i +".gif";
+        String path = "resources/gifs/Monster" +i +".gif";
         monsterGifs.add(new ImageIcon((path)));
     }
 
@@ -30,7 +30,7 @@ public class IdleClickerGame {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
        
-        Font pixelifyFont = Font.createFont(Font.TRUETYPE_FONT, new File ("SideProjectIdleGame/resources/font/PixelifySans-VariableFont_wght.ttf")).deriveFont(24f);
+        Font pixelifyFont = Font.createFont(Font.TRUETYPE_FONT, new File ("resources/font/PixelifySans-VariableFont_wght.ttf")).deriveFont(24f);
 
         
 
