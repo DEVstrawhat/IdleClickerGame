@@ -10,7 +10,11 @@ import java.util.ArrayList;
 
 public class IdleClickerGame {
 
+<<<<<<< HEAD
     //test123
+=======
+    //test
+>>>>>>> 25fcbb9eb1cd3afc3e56724fbe7034b19cd409c8
 
 
     private static ArrayList<ImageIcon> monsterGifs = new ArrayList<>();
