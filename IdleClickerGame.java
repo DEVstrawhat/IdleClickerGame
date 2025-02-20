@@ -7,8 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-//Test
-// Idea: An Idle Game where the world was destroyed and now you need to rebuild it, by clicking on the screen.
+// Idea: An Idle Game where you fight monsters to get stronger and buq more upgrades
 
 public class IdleClickerGame {
 
@@ -30,54 +29,42 @@ public class IdleClickerGame {
         JFrame frame = new JFrame("Idle MonsterHunter");
         frame.setSize(1920, 1080);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-       
-        Font pixelifyFont = Font.createFont(Font.TRUETYPE_FONT, new File ("resources/font/PixelifySans-VariableFont_wght.ttf")).deriveFont(24f);
-
-        
-
-    
+        //Font
+        Font pixelifyFont = Font.createFont(Font.TRUETYPE_FONT, new File ("resources/font/PixelifySans-VariableFont_wght.ttf")).deriveFont(24f);  
 
 
-        // UI Basics, Defining all Labels, Buttons and Timers:
-        // ==========================================================================================================================================
+    // UI Basics, Defining all Labels, Buttons and Timers:
+    // ==========================================================================================================================================
        
     /* structure of the UI 
 
     mainPanel (BorderLayout)
     │
-    ├── gifLabel (NORTH) → picture above 
+    ├── topPanel (Upper left corner) → gifLabel, bosslevel and bosshealthlabel
     │
-    └── bottomPanel (CENTER) → contains three parts:
-        ├── leftPanel → Click-Button & Points
-        ├── centerPanel → Clicker-Upgrade
-        ├── rightPanel → AutoClicker-Upgrade
+    └── upgradePanel (CENTER) → Click Button & Money
+    │ 
+    └── bottomPanel (CENTER) → contains two parts:
+    │   ├── centerPanel → Clicker-Upgrade
+    │   ├── rightPanel → AutoClicker-Upgrade
     */
         
-        // mainPanel
+        // mainPanel======================================================================================================================================
         JPanel mainPanel = new JPanel(new BorderLayout());
 
-        //topPanel
+
+        //topPanel=======================================================================================================================================
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
         topPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 10, 10)); // Abstand vom Rand
-
-
-
-            //gifLabel
+        
         loadMonsterGifs();
         ImageIcon gifIcon = monsterGifs.get(currentGifIndex);
         JLabel gifLabel = new JLabel(gifIcon);
-
-
         JLabel bossLevel = new JLabel("Boss level: 1");
         bossLevel.setFont(pixelifyFont);
-
-
         JLabel bossHealthLabel = new JLabel("Health: 20");
         bossHealthLabel.setFont(pixelifyFont);
-
-
 
         topPanel.add(bossLevel);
         topPanel.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -85,33 +72,29 @@ public class IdleClickerGame {
         topPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         topPanel.add(gifLabel);
         
-            // upgrade Panel
-        JPanel upgradeComponent = new JPanel(new BorderLayout());
-        upgradeComponent.setLayout(new BoxLayout(upgradeComponent, BoxLayout.Y_AXIS));
-
-        upgradeComponent.setBorder(BorderFactory.createEmptyBorder(100, 10, 10, 100)); // Padding
-
-                // LeftPanel
+        
+        // LeftPanel======================================================================================================================================
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
         leftPanel.setBorder(BorderFactory.createEmptyBorder(40, 50, 50, 10)); // Padding
-
         JLabel pointsLabel = new JLabel("Money: 0");
         pointsLabel.setFont(pixelifyFont);
-
         JButton clickButton = new JButton("Fight!");
         clickButton.setMargin(new Insets(50, 500, 50, 425)); // Oben, Links, Unten, Rechts
         clickButton.setFont(pixelifyFont);
-
-
-
-
+        
         leftPanel.add(clickButton);
         leftPanel.add(Box.createRigidArea(new Dimension(0, 10))); // 20px vertikaler Abstand
-
         leftPanel.add(pointsLabel);
 
-                // centerPanel
+
+        // upgrade Panel ===============================================================================================================================
+        JPanel upgradeComponent = new JPanel(new BorderLayout());
+        upgradeComponent.setLayout(new BoxLayout(upgradeComponent, BoxLayout.Y_AXIS));
+        upgradeComponent.setBorder(BorderFactory.createEmptyBorder(100, 10, 10, 100)); 
+
+
+        // centerPanel ==================================================================================================================================
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         JLabel clickerLabel = new JLabel("Clicker Level: 1");
@@ -121,24 +104,20 @@ public class IdleClickerGame {
         JLabel upgradeCostLabel = new JLabel("Upgrade Cost: 10");
         upgradeCostLabel.setFont(pixelifyFont);
         JButton clickerUpgradeButton = new JButton("Upgrade Clicker");
-        clickerUpgradeButton.setMargin(new Insets(50, 200, 50, 200)); // Oben, Links, Unten, Rechts
+        clickerUpgradeButton.setMargin(new Insets(50, 200, 50, 200)); 
         clickerUpgradeButton.setFont(pixelifyFont);
 
-
         centerPanel.add(upgradeOptionsLabel);
-        centerPanel.add(Box.createRigidArea(new Dimension(0, 50))); // 20px vertikaler Abstand
-
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 50))); // 50px vertical distance
         centerPanel.add(clickerUpgradeButton);
-        centerPanel.add(Box.createRigidArea(new Dimension(0, 25))); // 20px vertikaler Abstand
-
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 25))); 
         centerPanel.add(clickerLabel);
-        centerPanel.add(Box.createRigidArea(new Dimension(0, 25))); // 20px vertikaler Abstand
-
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 25))); 
         centerPanel.add(upgradeCostLabel);
-        centerPanel.add(Box.createRigidArea(new Dimension(0, 25))); // 20px vertikaler Abstand
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 25))); 
 
 
-                // RightPanel
+        // RightPanel =================================================================================================================================
         JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
         JLabel autoClickerLabel = new JLabel("Autoclicker Level: 0");
@@ -149,58 +128,47 @@ public class IdleClickerGame {
         autoUpgradeButton.setMargin(new Insets(50, 200, 50, 150)); // Oben, Links, Unten, Rechts
         autoUpgradeButton.setFont(pixelifyFont);
 
-
-
         rightPanel.add(autoUpgradeButton);
         rightPanel.add(Box.createRigidArea(new Dimension(0, 25))); // 20px vertikaler Abstand
-
         rightPanel.add(autoClickerLabel);
         rightPanel.add(Box.createRigidArea(new Dimension(0, 25))); // 20px vertikaler Abstand
-
         rightPanel.add(upgradeAutoLabel);
         rightPanel.add(Box.createRigidArea(new Dimension(0, 25))); // 20px vertikaler Abstand
 
-        
+
+        //gluing everything together  ===================================================================================================================
         upgradeComponent.add(centerPanel, BorderLayout.CENTER);
         upgradeComponent.add(rightPanel, BorderLayout.EAST);
-       
 
         mainPanel.add(topPanel, BorderLayout.WEST);
         mainPanel.add(leftPanel, BorderLayout.SOUTH);
         mainPanel.add(upgradeComponent, BorderLayout.EAST);
     
-
-
         frame.add(mainPanel);
         frame.setVisible(true);
 
-
         GameLogic gameLogic = new GameLogic(pointsLabel, autoClickerLabel, clickerLabel, upgradeCostLabel,
-                upgradeAutoLabel, bossHealthLabel, bossLevel, gifLabel, monsterGifs);
+        upgradeAutoLabel, bossHealthLabel, bossLevel, gifLabel, monsterGifs);
 
-        // Button for pointsLabel
+
+        // Buttons =====================================================================================================================================
         clickButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 gameLogic.incrementPoints();
             }
         });
 
-        // Button for autoClickerLabel
         autoUpgradeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 gameLogic.incrementAuto();
             }
         });
 
-        // Button for clickerLabel
         clickerUpgradeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 gameLogic.upgradeClicker();
             }
         });
-
-
-
     }
 }
 
@@ -307,15 +275,7 @@ class GameLogic { // not public class, because per file there only can be one pu
         autoClickTimer.start();
     }
 
-
-
-
-
-
-
-
-
-
+    
     // Methods to update the Labels
     // =========================================================================================================
     void updateBossLevel(){
