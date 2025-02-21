@@ -206,7 +206,7 @@ class BackgroundPanel extends JPanel {
     public BackgroundPanel(String imagePath) {
         this.backgroundImage = new ImageIcon(imagePath).getImage();
     }
-
+//test
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
