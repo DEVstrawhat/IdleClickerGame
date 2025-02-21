@@ -57,14 +57,15 @@ public class IdleClickerGame {
     */
         
         // mainPanel======================================================================================================================================
-        JPanel mainPanel = new JPanel(new BorderLayout());
-
+        JPanel mainPanel = new BackgroundPanel("#413a4c");
+        mainPanel.setLayout(new BorderLayout());
 
         //topPanel=======================================================================================================================================
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
         topPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 10, 10)); // Abstand vom Rand
-        
+        topPanel.setOpaque(false); // Transparent
+
         loadMonsterGifs();
         ImageIcon gifIcon = monsterGifs.get(currentGifIndex);
         JLabel gifLabel = new JLabel(gifIcon);
@@ -72,7 +73,9 @@ public class IdleClickerGame {
         JLabel deathGifLabel = new JLabel(deathGifIcon);
         JLabel bossLevel = new JLabel("Monster level: 1");
         bossLevel.setFont(pixelifyFont);
+        bossLevel.setForeground(Color.WHITE);
         JLabel bossHealthLabel = new JLabel("Health: 20");
+        bossHealthLabel.setForeground(Color.WHITE);
         bossHealthLabel.setFont(pixelifyFont);
 
         topPanel.add(bossLevel);
@@ -86,8 +89,12 @@ public class IdleClickerGame {
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
         leftPanel.setBorder(BorderFactory.createEmptyBorder(40, 50, 50, 10)); // Padding
+        leftPanel.setOpaque(false); // Transparent
+
+        
         JLabel pointsLabel = new JLabel("Money: 0");
         pointsLabel.setFont(pixelifyFont);
+        pointsLabel.setForeground(Color.WHITE);
         JButton clickButton = new JButton("Fight!");
         clickButton.setMargin(new Insets(50, 500, 50, 425)); // Oben, Links, Unten, Rechts
         clickButton.setFont(pixelifyFont);
@@ -101,17 +108,23 @@ public class IdleClickerGame {
         JPanel upgradeComponent = new JPanel(new BorderLayout());
         upgradeComponent.setLayout(new BoxLayout(upgradeComponent, BoxLayout.Y_AXIS));
         upgradeComponent.setBorder(BorderFactory.createEmptyBorder(100, 10, 10, 100)); 
+        upgradeComponent.setOpaque(false); // Transparent
 
 
         // centerPanel ==================================================================================================================================
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+        centerPanel.setOpaque(false); // Transparent
+
         JLabel clickerLabel = new JLabel("Clicker Level: 1");
         clickerLabel.setFont(pixelifyFont);
+        clickerLabel.setForeground(Color.WHITE);
         JLabel upgradeOptionsLabel = new JLabel("Upgrade your skills!");
         upgradeOptionsLabel.setFont(pixelifyFont);
+        upgradeOptionsLabel.setForeground(Color.WHITE);
         JLabel upgradeCostLabel = new JLabel("Upgrade Cost: 10");
         upgradeCostLabel.setFont(pixelifyFont);
+        upgradeCostLabel.setForeground(Color.WHITE);
         JButton clickerUpgradeButton = new JButton("Upgrade Clicker");
         clickerUpgradeButton.setMargin(new Insets(50, 200, 50, 200)); 
         clickerUpgradeButton.setFont(pixelifyFont);
@@ -129,10 +142,14 @@ public class IdleClickerGame {
         // RightPanel =================================================================================================================================
         JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
+        rightPanel.setOpaque(false); // Transparent
+
         JLabel autoClickerLabel = new JLabel("Autoclicker Level: 0");
         autoClickerLabel.setFont(pixelifyFont);
+        autoClickerLabel.setForeground(Color.WHITE);
         JLabel upgradeAutoLabel = new JLabel("Upgrade Cost: 100");
         upgradeAutoLabel.setFont(pixelifyFont);
+        upgradeAutoLabel.setForeground(Color.WHITE);
         JButton autoUpgradeButton = new JButton("Upgrade Autoclicker");
         autoUpgradeButton.setMargin(new Insets(50, 200, 50, 150)); // Oben, Links, Unten, Rechts
         autoUpgradeButton.setFont(pixelifyFont);
@@ -178,6 +195,22 @@ public class IdleClickerGame {
                 gameLogic.upgradeClicker();
             }
         });
+    }
+}
+
+
+class BackgroundPanel extends JPanel {
+    private Color backgroundColor;
+
+    public BackgroundPanel(String hexColor) {
+        this.backgroundColor = Color.decode(hexColor); // Hex-Farbe in Color umwandeln
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.setColor(backgroundColor); // Hintergrundfarbe setzen
+        g.fillRect(0, 0, getWidth(), getHeight()); // Hintergrund zeichnen
     }
 }
 
