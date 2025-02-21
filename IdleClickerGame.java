@@ -57,7 +57,7 @@ public class IdleClickerGame {
     */
         
         // mainPanel======================================================================================================================================
-        JPanel mainPanel = new BackgroundPanel("#413a4c");
+        JPanel mainPanel = new BackgroundPanel( "resources/background/backgroundimage.jpg");
         mainPanel.setLayout(new BorderLayout());
 
         //topPanel=======================================================================================================================================
@@ -161,6 +161,7 @@ public class IdleClickerGame {
         rightPanel.add(upgradeAutoLabel);
         rightPanel.add(Box.createRigidArea(new Dimension(0, 25))); // 20px vertikaler Abstand
 
+        
 
         //gluing everything together  ===================================================================================================================
         upgradeComponent.add(centerPanel, BorderLayout.CENTER);
@@ -200,17 +201,17 @@ public class IdleClickerGame {
 
 
 class BackgroundPanel extends JPanel {
-    private Color backgroundColor;
+    private Image backgroundImage;
 
-    public BackgroundPanel(String hexColor) {
-        this.backgroundColor = Color.decode(hexColor); // Hex-Farbe in Color umwandeln
+    public BackgroundPanel(String imagePath) {
+        this.backgroundImage = new ImageIcon(imagePath).getImage();
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.setColor(backgroundColor); // Hintergrundfarbe setzen
-        g.fillRect(0, 0, getWidth(), getHeight()); // Hintergrund zeichnen
+
+        g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this); // Hintergrund zeichnen
     }
 }
 
