@@ -70,7 +70,7 @@ public class IdleClickerGame {
         JLabel gifLabel = new JLabel(gifIcon);
         ImageIcon deathGifIcon = monsterDeathGifs.get(currentGifIndex);
         JLabel deathGifLabel = new JLabel(deathGifIcon);
-        JLabel bossLevel = new JLabel("Boss level: 1");
+        JLabel bossLevel = new JLabel("Monster level: 1");
         bossLevel.setFont(pixelifyFont);
         JLabel bossHealthLabel = new JLabel("Health: 20");
         bossHealthLabel.setFont(pixelifyFont);
