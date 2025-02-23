@@ -74,10 +74,15 @@ public class IdleClickerGame {
         JLabel bossLevel = new JLabel("Monster level: 1");
         bossLevel.setFont(pixelifyFont);
         bossLevel.setForeground(Color.WHITE);
-        JLabel bossHealthLabel = new JLabel("Health: 20");
+        JLabel bossHealthLabel = new JLabel("Health: 10");
         bossHealthLabel.setForeground(Color.WHITE);
         bossHealthLabel.setFont(pixelifyFont);
+        JLabel zoneLabel = new JLabel("Zone: 1");
+        zoneLabel.setForeground(Color.WHITE);
+        zoneLabel.setFont(pixelifyFont);
 
+        topPanel.add(zoneLabel);
+        topPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         topPanel.add(bossLevel);
         topPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         topPanel.add(bossHealthLabel);
@@ -107,7 +112,7 @@ public class IdleClickerGame {
         // upgrade Panel ===============================================================================================================================
         JPanel upgradeComponent = new JPanel(new BorderLayout());
         upgradeComponent.setLayout(new BoxLayout(upgradeComponent, BoxLayout.Y_AXIS));
-        upgradeComponent.setBorder(BorderFactory.createEmptyBorder(100, 10, 10, 100)); 
+        upgradeComponent.setBorder(BorderFactory.createEmptyBorder(100, 10, 10, 85)); 
         upgradeComponent.setOpaque(false); // Transparent
 
 
@@ -122,11 +127,12 @@ public class IdleClickerGame {
         JLabel upgradeOptionsLabel = new JLabel("Upgrade your skills!");
         upgradeOptionsLabel.setFont(pixelifyFont);
         upgradeOptionsLabel.setForeground(Color.WHITE);
+        upgradeOptionsLabel.setFont(upgradeOptionsLabel.getFont().deriveFont(Font.BOLD));
         JLabel upgradeCostLabel = new JLabel("Upgrade Cost: 10");
         upgradeCostLabel.setFont(pixelifyFont);
         upgradeCostLabel.setForeground(Color.WHITE);
         JButton clickerUpgradeButton = new JButton("Upgrade Clicker");
-        clickerUpgradeButton.setMargin(new Insets(50, 200, 50, 200)); 
+        clickerUpgradeButton.setMargin(new Insets(50, 175, 50, 175)); 
         clickerUpgradeButton.setFont(pixelifyFont);
 
         centerPanel.add(upgradeOptionsLabel);
@@ -149,9 +155,10 @@ public class IdleClickerGame {
         autoClickerLabel.setForeground(Color.WHITE);
         JLabel upgradeAutoLabel = new JLabel("Upgrade Cost: 100");
         upgradeAutoLabel.setFont(pixelifyFont);
+        
         upgradeAutoLabel.setForeground(Color.WHITE);
         JButton autoUpgradeButton = new JButton("Upgrade Autoclicker");
-        autoUpgradeButton.setMargin(new Insets(50, 200, 50, 150)); // Oben, Links, Unten, Rechts
+        autoUpgradeButton.setMargin(new Insets(50, 175, 50, 175)); // Oben, Links, Unten, Rechts
         autoUpgradeButton.setFont(pixelifyFont);
 
         rightPanel.add(autoUpgradeButton);
@@ -175,7 +182,7 @@ public class IdleClickerGame {
         frame.setVisible(true);
 
         GameLogic gameLogic = new GameLogic(pointsLabel, autoClickerLabel, clickerLabel, upgradeCostLabel,
-        upgradeAutoLabel, bossHealthLabel, bossLevel, gifLabel, deathGifLabel, monsterGifs, monsterDeathGifs);
+        upgradeAutoLabel, bossHealthLabel, bossLevel, gifLabel, deathGifLabel, monsterGifs, monsterDeathGifs, zoneLabel);
 
 
         // Buttons =====================================================================================================================================
@@ -224,10 +231,23 @@ class GameLogic { // not public class, because per file there only can be one pu
     int autoClickerLevel = 0;
     int autoClickerCost = 100;
     int clickerLevel = 1;
-    int upgradeCost = 10 * clickerLevel;
-    int bossHealth = 20;
+    int bossHealth = 10;
     int bossLevelInt = 1;
     int currentGifIndex =0;
+    double costbase = 5;
+    double rategrowth = 1.07;
+    int owned = 0;
+    int multipliers = 1;
+    double productionBase = 1;
+    double rateMonster = 1.55;
+    int currrentZone = 1;
+    int defeatedMonsterInCurrentZone = 0;
+    final int MonsterInZone = 10;
+    double costbaseAuto1 = 50;
+    double rategrowthAuto1 = 1.22;
+    int ownedAuto1 = 0;
+
+
     private JLabel pointsLabel;
     private JLabel autoClickerLabel;
     private JLabel clickerLabel;
@@ -238,6 +258,7 @@ class GameLogic { // not public class, because per file there only can be one pu
     private JLabel gifLabel;
     private JLabel deathGifLabel;
     private boolean isDeathAnimationActive = false; 
+    private JLabel zoneLabel;
 
 
     ArrayList <ImageIcon> monsterGifs;
@@ -250,7 +271,7 @@ class GameLogic { // not public class, because per file there only can be one pu
     // Constructor with all lables. As I understood it, it says that the lables we
     // are using in this class GameLogic equals the labels form main
     public GameLogic(JLabel pointsLabel, JLabel autoClickerLabel, JLabel clickerLabel, JLabel upgradeCostLabel,
-            JLabel upgradeAutoLabel, JLabel bossHealthLabel, JLabel bossLevel, JLabel gifLabel, JLabel deathGifLabel, ArrayList<ImageIcon> monsterGifs, ArrayList<ImageIcon> monsterDeathGifs) {
+            JLabel upgradeAutoLabel, JLabel bossHealthLabel, JLabel bossLevel, JLabel gifLabel, JLabel deathGifLabel, ArrayList<ImageIcon> monsterGifs, ArrayList<ImageIcon> monsterDeathGifs, JLabel zoneLabel) {
         this.pointsLabel = pointsLabel;
         this.autoClickerLabel = autoClickerLabel;
         this.clickerLabel = clickerLabel;
@@ -262,18 +283,40 @@ class GameLogic { // not public class, because per file there only can be one pu
         this.deathGifLabel = deathGifLabel;
         this.monsterGifs = monsterGifs;
         this.monsterDeathGifs = monsterDeathGifs;
+        this.zoneLabel = zoneLabel;
 
         updateUpgradeCostLabel();
-        updateUpgradeAutoLabel();
+        updateUpgradeAutoLabel(); 
 
         autoClickTimer = new Timer(1000 /* 1000 ms equals 1 second */ , new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 points += autoClickerLevel;
-                bossHealth -= autoClickerLevel;
+                bossHealth = bossHealth - (5* ownedAuto1);
                 updateBossHealth();
                 checkBossHealth();
             }
         });
+    }
+
+
+    // Calculation formulas ======================================================================================================
+    // How much Gold shoulod drop after a monster is dead
+    int calculateNextProduction(){
+        return (int) ((productionBase * currrentZone *multipliers)); //I will add multipliers later in the game 
+    }
+    // How much does the next upgrade costs
+    int calculateNextCost(){
+        return (int) (((costbase + owned) *Math.pow(rategrowth, owned)));
+    }
+
+    // How much life has the next monster 
+    int calculateNextMonster(){
+        return (int) (10*(currrentZone- 1 + Math.pow(rateMonster, currrentZone-1)));
+    }
+
+    // How much cost for autoclicker 
+    int calculateNextAutoCost1(){
+        return (int) (costbaseAuto1 *Math.pow(rategrowthAuto1, ownedAuto1));
     }
 
     // Function Nr.1: Click Button
@@ -287,18 +330,20 @@ class GameLogic { // not public class, because per file there only can be one pu
     }
 }
 
+
     // Function Nr.2: Upgrade Clicker Button
     // ==============================================================================================
 
     void upgradeClicker() {
-        if (points >= upgradeCost) {
-            points -= upgradeCost;
+        int nextCost = calculateNextCost();
+        if (points >= nextCost) {
+            points -= nextCost;
             clickerLevel++;
-            upgradeCost *= 2 ;
-
+            owned++;
             updatePointsLabel();
             updateClickerLabel();
             updateUpgradeCostLabel();
+            
         }
     }
 
@@ -306,11 +351,13 @@ class GameLogic { // not public class, because per file there only can be one pu
     // ==========================================================================================================
 
     void incrementAuto() {
-        if (points >= autoClickerCost) {
-            points -= autoClickerCost;
+        int nextAutoCost = calculateNextAutoCost1();
+        
+        if (points >= nextAutoCost) {
+            points -= nextAutoCost;
             
             autoClickerLevel++;
-            autoClickerCost *= 2;
+            ownedAuto1++;
             updatePointsLabel();
             updateAutoClickerLabel();
             updateUpgradeAutoLabel();
@@ -350,12 +397,21 @@ class GameLogic { // not public class, because per file there only can be one pu
         autoClickerLabel.setText("Auto Clicker level: " + autoClickerLevel);
     }
 
+    void updateZoneLabel(){
+        zoneLabel.setText("Zone: " + currrentZone);
+    }
+
     private void updateUpgradeCostLabel() {
-        upgradeCostLabel.setText("Upgrade Cost: " + upgradeCost);
+    int nextCost = calculateNextCost();
+        upgradeCostLabel.setText("Upgrade Cost: " + nextCost);
+      
+
+    
     }
 
     private void updateUpgradeAutoLabel() {
-        upgradeAutoLabel.setText("Upgrade Cost: " + autoClickerCost);
+        int nextAutoCost = calculateNextAutoCost1();
+        upgradeAutoLabel.setText("Upgrade Cost: " + nextAutoCost);
     }
     
     private void checkBossHealth(){
@@ -364,19 +420,28 @@ class GameLogic { // not public class, because per file there only can be one pu
                 bossHealth = 0;
                 updateBossHealth();
                 isDeathAnimationActive = true;
-        
+
                 gifLabel.setIcon(monsterDeathGifs.get(currentGifIndex));
         
-                Timer deathTimer = new Timer(1000, new ActionListener() {
+                Timer deathTimer = new Timer(700, new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
+                        defeatedMonsterInCurrentZone++;
 
+                        if (defeatedMonsterInCurrentZone >= MonsterInZone){
+                            currrentZone++;
+                            defeatedMonsterInCurrentZone =0;
+
+                        }
+                        int nextProduction = calculateNextProduction();
+                        int nextMonster = calculateNextMonster();
                         bossLevelInt++;
-                        bossHealth = 20 * bossLevelInt;
-                        updateBossLevel();
-                        points += 10 * bossLevelInt;
-                        updatePointsLabel();
+                        bossHealth = bossHealth + nextMonster;
+                        points = points + nextProduction;
                         updateBossHealth();
+                        updateBossLevel();
+                        updatePointsLabel();
+                        updateZoneLabel();
                         
         
                         currentGifIndex = (currentGifIndex + 1) % monsterGifs.size();
