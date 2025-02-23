@@ -80,6 +80,9 @@ public class IdleClickerGame {
         JLabel zoneLabel = new JLabel("Zone: 1");
         zoneLabel.setForeground(Color.WHITE);
         zoneLabel.setFont(pixelifyFont);
+        JLabel dmgPerSecond = new JLabel("Automated DMG: 0/s");
+        dmgPerSecond.setForeground(Color.WHITE);
+        dmgPerSecond.setFont(pixelifyFont);
 
         topPanel.add(zoneLabel);
         topPanel.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -87,7 +90,10 @@ public class IdleClickerGame {
         topPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         topPanel.add(bossHealthLabel);
         topPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        topPanel.add(dmgPerSecond);
+        topPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         topPanel.add(gifLabel);
+
         
         
         // LeftPanel======================================================================================================================================
@@ -182,7 +188,7 @@ public class IdleClickerGame {
         frame.setVisible(true);
 
         GameLogic gameLogic = new GameLogic(pointsLabel, autoClickerLabel, clickerLabel, upgradeCostLabel,
-        upgradeAutoLabel, bossHealthLabel, bossLevel, gifLabel, deathGifLabel, monsterGifs, monsterDeathGifs, zoneLabel);
+        upgradeAutoLabel, bossHealthLabel, bossLevel, gifLabel, deathGifLabel, monsterGifs, monsterDeathGifs, zoneLabel, dmgPerSecond);
 
 
         // Buttons =====================================================================================================================================
@@ -259,6 +265,7 @@ class GameLogic { // not public class, because per file there only can be one pu
     private JLabel deathGifLabel;
     private boolean isDeathAnimationActive = false; 
     private JLabel zoneLabel;
+    private JLabel dmgPerSecond;
 
 
     ArrayList <ImageIcon> monsterGifs;
@@ -271,7 +278,7 @@ class GameLogic { // not public class, because per file there only can be one pu
     // Constructor with all lables. As I understood it, it says that the lables we
     // are using in this class GameLogic equals the labels form main
     public GameLogic(JLabel pointsLabel, JLabel autoClickerLabel, JLabel clickerLabel, JLabel upgradeCostLabel,
-            JLabel upgradeAutoLabel, JLabel bossHealthLabel, JLabel bossLevel, JLabel gifLabel, JLabel deathGifLabel, ArrayList<ImageIcon> monsterGifs, ArrayList<ImageIcon> monsterDeathGifs, JLabel zoneLabel) {
+            JLabel upgradeAutoLabel, JLabel bossHealthLabel, JLabel bossLevel, JLabel gifLabel, JLabel deathGifLabel, ArrayList<ImageIcon> monsterGifs, ArrayList<ImageIcon> monsterDeathGifs, JLabel zoneLabel, JLabel dmgPerSecond) {
         this.pointsLabel = pointsLabel;
         this.autoClickerLabel = autoClickerLabel;
         this.clickerLabel = clickerLabel;
@@ -284,6 +291,7 @@ class GameLogic { // not public class, because per file there only can be one pu
         this.monsterGifs = monsterGifs;
         this.monsterDeathGifs = monsterDeathGifs;
         this.zoneLabel = zoneLabel;
+        this.dmgPerSecond = dmgPerSecond;
 
         updateUpgradeCostLabel();
         updateUpgradeAutoLabel(); 
@@ -361,6 +369,7 @@ class GameLogic { // not public class, because per file there only can be one pu
             updatePointsLabel();
             updateAutoClickerLabel();
             updateUpgradeAutoLabel();
+            updateDmgPerSecond();
 
             if (!isAutoClickerRunning) {
                 startAutoclicker();
@@ -389,6 +398,9 @@ class GameLogic { // not public class, because per file there only can be one pu
         pointsLabel.setText("Money: " + points);
     }
 
+    void updateDmgPerSecond(){
+        dmgPerSecond.setText("Automated DMG: " + (5*ownedAuto1) +"/s");
+    }
     void updateClickerLabel() {
         clickerLabel.setText("Clicker level: " + clickerLevel);
     }
