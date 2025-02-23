@@ -1,3 +1,4 @@
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -5,39 +6,59 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-
+import java.util.Random;
 
 // Idea: An Idle Game where you fight monsters to get stronger and buq more upgrades
-
 public class IdleClickerGame {
 
-
     private static ArrayList<ImageIcon> monsterGifs = new ArrayList<>();
-    private static ArrayList<ImageIcon> monsterDeathGifs = new ArrayList<>();
     private static int currentGifIndex = 0;
+    private static Random random = new Random();
+
+    
+    private static ImageIcon resizeGif(String path, int width, int height) {
+        ImageIcon icon = new ImageIcon(path);
+        Image image = icon.getImage().getScaledInstance(width, height, Image.SCALE_DEFAULT);
+        return new ImageIcon(image);
+    }
 
     private static void loadMonsterGifs() {
-    for (int i = 1; i <= 9; i++) {  // Falls deine Dateien "monster1.gif", "monster2.gif" usw. heißen
-        String path = "resources/gifs/Monster" +i +".gif";
-        String deathpath = "resources/deathgifs/Monster" +i +".gif";
-
-        monsterGifs.add(new ImageIcon((path)));
-        monsterDeathGifs.add(new ImageIcon((deathpath)));
+        int gifWidth = 700;  // Breite des GIFs
+        int gifHeight = 500;  // Höhe des GIFs
+        
+        File folder = new File("resources/png");
+        File[] files = folder.listFiles((dir, name) -> name.endsWith(".png"));
+    
+        if (files != null && files.length > 0) {
+            for (File file : files) {
+                ImageIcon resizedIcon = resizeGif(file.getAbsolutePath(), gifWidth, gifHeight);
+                monsterGifs.add(resizedIcon);
+    
     }
+}
+}
 
-    }
+
 
     public static void main(String[] args) throws FontFormatException, IOException {
-        
+
         // Frame creation 
         JFrame frame = new JFrame("Idle MonsterHunter");
         frame.setSize(1920, 1080);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //Background music
-    MusicPlayer musicPlayer = new MusicPlayer();
-    musicPlayer.playMusic("dungeonBeat.wav");
+        //MusicPlayer musicPlayer = new MusicPlayer();
+        //musicPlayer.playMusic("dungeonBeat.wav");
         //Font
         Font pixelifyFont = Font.createFont(Font.TRUETYPE_FONT, new File ("resources/font/PixelifySans-VariableFont_wght.ttf")).deriveFont(24f);  
+
+        JProgressBar healthBar = new JProgressBar(0, 10);
+        healthBar.setStringPainted(true); // Prozentanzeige aktivieren
+        healthBar.setForeground(Color.RED); // Farbe der Leiste (Lebensanzeige)
+        healthBar.setBackground(Color.DARK_GRAY); 
+        int maxHP = healthBar.getMaximum();
+
+
 
 
     // UI Basics, Defining all Labels, Buttons and Timers:
@@ -47,30 +68,27 @@ public class IdleClickerGame {
 
     mainPanel (BorderLayout)
     │
-    ├── topPanel (Upper left corner) → gifLabel, bosslevel and bosshealthlabel
+    ├── left Panel
     │
-    └── upgradePanel (CENTER) → Click Button & Money
-    │ 
-    └── bottomPanel (CENTER) → contains two parts:
-    │   ├── centerPanel → Clicker-Upgrade
-    │   ├── rightPanel → AutoClicker-Upgrade
+    └── rightPanel 
+    │
+  
     */
         
         // mainPanel======================================================================================================================================
         JPanel mainPanel = new BackgroundPanel( "resources/background/backgroundimage.jpg");
         mainPanel.setLayout(new BorderLayout());
 
-        //topPanel=======================================================================================================================================
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
-        topPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 10, 10)); // Abstand vom Rand
-        topPanel.setOpaque(false); // Transparent
+        //leftPanel=======================================================================================================================================
+        JPanel leftPanel = new JPanel();
+        leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
+        leftPanel.setBorder(BorderFactory.createEmptyBorder(150, 100, 50, 0)); // Abstand vom Rand
+        leftPanel.setOpaque(false); // Transparent
 
         loadMonsterGifs();
+        currentGifIndex = random.nextInt(monsterGifs.size());
         ImageIcon gifIcon = monsterGifs.get(currentGifIndex);
         JLabel gifLabel = new JLabel(gifIcon);
-        ImageIcon deathGifIcon = monsterDeathGifs.get(currentGifIndex);
-        JLabel deathGifLabel = new JLabel(deathGifIcon);
         JLabel bossLevel = new JLabel("Monster level: 1");
         bossLevel.setFont(pixelifyFont);
         bossLevel.setForeground(Color.WHITE);
@@ -83,50 +101,35 @@ public class IdleClickerGame {
         JLabel dmgPerSecond = new JLabel("Automated DMG: 0/s");
         dmgPerSecond.setForeground(Color.WHITE);
         dmgPerSecond.setFont(pixelifyFont);
+        JButton clickButton = new JButton("Fight!");
+        clickButton.setMargin(new Insets(50, 500, 50, 425)); // Oben, Links, Unten, Rechts
+        clickButton.setFont(pixelifyFont);
 
-        topPanel.add(zoneLabel);
-        topPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        topPanel.add(bossLevel);
-        topPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        topPanel.add(bossHealthLabel);
-        topPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        topPanel.add(dmgPerSecond);
-        topPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        topPanel.add(gifLabel);
+        leftPanel.add(gifLabel);
+        leftPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        leftPanel.add(zoneLabel);
+        leftPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        leftPanel.add(bossLevel);
+        leftPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        leftPanel.add(dmgPerSecond);
+        leftPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        leftPanel.add(bossHealthLabel);
+        leftPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        leftPanel.add(healthBar);
+        leftPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        leftPanel.add(clickButton);
 
         
-        
-        // LeftPanel======================================================================================================================================
-        JPanel leftPanel = new JPanel();
-        leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
-        leftPanel.setBorder(BorderFactory.createEmptyBorder(40, 50, 50, 10)); // Padding
-        leftPanel.setOpaque(false); // Transparent
+        // RightPanel======================================================================================================================================
+        JPanel rightPanel = new JPanel();
+        rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
+        rightPanel.setBorder(BorderFactory.createEmptyBorder(40, 50, 50, 10)); // Padding
+        rightPanel.setOpaque(false); // Transparent
 
         
         JLabel pointsLabel = new JLabel("Money: 0");
         pointsLabel.setFont(pixelifyFont);
         pointsLabel.setForeground(Color.WHITE);
-        JButton clickButton = new JButton("Fight!");
-        clickButton.setMargin(new Insets(50, 500, 50, 425)); // Oben, Links, Unten, Rechts
-        clickButton.setFont(pixelifyFont);
-        
-        leftPanel.add(clickButton);
-        leftPanel.add(Box.createRigidArea(new Dimension(0, 10))); // 20px vertikaler Abstand
-        leftPanel.add(pointsLabel);
-
-
-        // upgrade Panel ===============================================================================================================================
-        JPanel upgradeComponent = new JPanel(new BorderLayout());
-        upgradeComponent.setLayout(new BoxLayout(upgradeComponent, BoxLayout.Y_AXIS));
-        upgradeComponent.setBorder(BorderFactory.createEmptyBorder(100, 10, 10, 85)); 
-        upgradeComponent.setOpaque(false); // Transparent
-
-
-        // centerPanel ==================================================================================================================================
-        JPanel centerPanel = new JPanel();
-        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-        centerPanel.setOpaque(false); // Transparent
-
         JLabel clickerLabel = new JLabel("Clicker Level: 1");
         clickerLabel.setFont(pixelifyFont);
         clickerLabel.setForeground(Color.WHITE);
@@ -140,33 +143,26 @@ public class IdleClickerGame {
         JButton clickerUpgradeButton = new JButton("Upgrade Clicker");
         clickerUpgradeButton.setMargin(new Insets(50, 175, 50, 175)); 
         clickerUpgradeButton.setFont(pixelifyFont);
-
-        centerPanel.add(upgradeOptionsLabel);
-        centerPanel.add(Box.createRigidArea(new Dimension(0, 50))); // 50px vertical distance
-        centerPanel.add(clickerUpgradeButton);
-        centerPanel.add(Box.createRigidArea(new Dimension(0, 25))); 
-        centerPanel.add(clickerLabel);
-        centerPanel.add(Box.createRigidArea(new Dimension(0, 25))); 
-        centerPanel.add(upgradeCostLabel);
-        centerPanel.add(Box.createRigidArea(new Dimension(0, 25))); 
-
-
-        // RightPanel =================================================================================================================================
-        JPanel rightPanel = new JPanel();
-        rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
-        rightPanel.setOpaque(false); // Transparent
-
         JLabel autoClickerLabel = new JLabel("Autoclicker Level: 0");
         autoClickerLabel.setFont(pixelifyFont);
         autoClickerLabel.setForeground(Color.WHITE);
         JLabel upgradeAutoLabel = new JLabel("Upgrade Cost: 100");
         upgradeAutoLabel.setFont(pixelifyFont);
-        
         upgradeAutoLabel.setForeground(Color.WHITE);
         JButton autoUpgradeButton = new JButton("Upgrade Autoclicker");
         autoUpgradeButton.setMargin(new Insets(50, 175, 50, 175)); // Oben, Links, Unten, Rechts
         autoUpgradeButton.setFont(pixelifyFont);
-
+       
+        rightPanel.add(upgradeOptionsLabel);
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 50))); // 50px vertical distance
+        rightPanel.add(pointsLabel);
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 25))); // 50px vertical distance
+        rightPanel.add(clickerUpgradeButton);
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 25))); 
+        rightPanel.add(clickerLabel);
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 25))); 
+        rightPanel.add(upgradeCostLabel);
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 25))); 
         rightPanel.add(autoUpgradeButton);
         rightPanel.add(Box.createRigidArea(new Dimension(0, 25))); // 20px vertikaler Abstand
         rightPanel.add(autoClickerLabel);
@@ -177,18 +173,16 @@ public class IdleClickerGame {
         
 
         //gluing everything together  ===================================================================================================================
-        upgradeComponent.add(centerPanel, BorderLayout.CENTER);
-        upgradeComponent.add(rightPanel, BorderLayout.EAST);
 
-        mainPanel.add(topPanel, BorderLayout.WEST);
-        mainPanel.add(leftPanel, BorderLayout.SOUTH);
-        mainPanel.add(upgradeComponent, BorderLayout.EAST);
+
+        mainPanel.add(leftPanel, BorderLayout.WEST);
+        mainPanel.add(rightPanel, BorderLayout.EAST);
     
         frame.add(mainPanel);
         frame.setVisible(true);
 
         GameLogic gameLogic = new GameLogic(pointsLabel, autoClickerLabel, clickerLabel, upgradeCostLabel,
-        upgradeAutoLabel, bossHealthLabel, bossLevel, gifLabel, deathGifLabel, monsterGifs, monsterDeathGifs, zoneLabel, dmgPerSecond);
+        upgradeAutoLabel, bossHealthLabel, bossLevel, gifLabel, monsterGifs, zoneLabel, dmgPerSecond, healthBar, maxHP);
 
 
         // Buttons =====================================================================================================================================
@@ -252,6 +246,7 @@ class GameLogic { // not public class, because per file there only can be one pu
     double costbaseAuto1 = 50;
     double rategrowthAuto1 = 1.22;
     int ownedAuto1 = 0;
+    int maxHP;
 
 
     private JLabel pointsLabel;
@@ -262,10 +257,11 @@ class GameLogic { // not public class, because per file there only can be one pu
     private JLabel bossHealthLabel;
     private JLabel bossLevel;
     private JLabel gifLabel;
-    private JLabel deathGifLabel;
-    private boolean isDeathAnimationActive = false; 
     private JLabel zoneLabel;
     private JLabel dmgPerSecond;
+    private static Random random = new Random();
+    private JProgressBar healthBar;
+
 
 
     ArrayList <ImageIcon> monsterGifs;
@@ -278,7 +274,7 @@ class GameLogic { // not public class, because per file there only can be one pu
     // Constructor with all lables. As I understood it, it says that the lables we
     // are using in this class GameLogic equals the labels form main
     public GameLogic(JLabel pointsLabel, JLabel autoClickerLabel, JLabel clickerLabel, JLabel upgradeCostLabel,
-            JLabel upgradeAutoLabel, JLabel bossHealthLabel, JLabel bossLevel, JLabel gifLabel, JLabel deathGifLabel, ArrayList<ImageIcon> monsterGifs, ArrayList<ImageIcon> monsterDeathGifs, JLabel zoneLabel, JLabel dmgPerSecond) {
+            JLabel upgradeAutoLabel, JLabel bossHealthLabel, JLabel bossLevel, JLabel gifLabel, ArrayList<ImageIcon> monsterGifs, JLabel zoneLabel, JLabel dmgPerSecond, JProgressBar healthBar, int maxHP) {
         this.pointsLabel = pointsLabel;
         this.autoClickerLabel = autoClickerLabel;
         this.clickerLabel = clickerLabel;
@@ -287,11 +283,14 @@ class GameLogic { // not public class, because per file there only can be one pu
         this.bossHealthLabel = bossHealthLabel;
         this.bossLevel = bossLevel;
         this.gifLabel = gifLabel;
-        this.deathGifLabel = deathGifLabel;
         this.monsterGifs = monsterGifs;
-        this.monsterDeathGifs = monsterDeathGifs;
         this.zoneLabel = zoneLabel;
         this.dmgPerSecond = dmgPerSecond;
+        this.healthBar = healthBar;
+        this.maxHP = maxHP;
+
+        healthBar.setMaximum(maxHP);
+        healthBar.setValue(bossHealth);
 
         updateUpgradeCostLabel();
         updateUpgradeAutoLabel(); 
@@ -392,6 +391,7 @@ class GameLogic { // not public class, because per file there only can be one pu
 
     void updateBossHealth(){
         bossHealthLabel.setText("Health: " + bossHealth);
+        healthBar.setValue(bossHealth);
     }
 
     void updatePointsLabel() {
@@ -428,14 +428,12 @@ class GameLogic { // not public class, because per file there only can be one pu
     
     private void checkBossHealth(){
 
-        if (bossHealth <= 0 && !isDeathAnimationActive) {
+        if (bossHealth <= 0) {
                 bossHealth = 0;
                 updateBossHealth();
-                isDeathAnimationActive = true;
 
-                gifLabel.setIcon(monsterDeathGifs.get(currentGifIndex));
         
-                Timer deathTimer = new Timer(700, new ActionListener() {
+                Timer deathTimer = new Timer(300, new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         defeatedMonsterInCurrentZone++;
@@ -448,17 +446,20 @@ class GameLogic { // not public class, because per file there only can be one pu
                         int nextProduction = calculateNextProduction();
                         int nextMonster = calculateNextMonster();
                         bossLevelInt++;
+                        maxHP = nextMonster;
                         bossHealth = bossHealth + nextMonster;
+                        healthBar.setMaximum(maxHP);
+                        healthBar.setValue(Math.max(0, bossHealth));
                         points = points + nextProduction;
                         updateBossHealth();
                         updateBossLevel();
                         updatePointsLabel();
                         updateZoneLabel();
                         
-        
-                        currentGifIndex = (currentGifIndex + 1) % monsterGifs.size();
+                        
+                        currentGifIndex = random.nextInt(monsterGifs.size());
                         gifLabel.setIcon(monsterGifs.get(currentGifIndex));
-                        isDeathAnimationActive = false;
+                       
 
                     }
                 });

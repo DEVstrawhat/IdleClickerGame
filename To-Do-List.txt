@@ -1,7 +1,6 @@
 To-Do-List:
 
 1. Visual Changes  
-    1.1  set a backgroundpicture 
 
 2. Functionality 
     2.2 Add effects to the game 
@@ -11,9 +10,9 @@ To-Do-List:
     2.4. Add achievments 
     2.5. add settings, where you can turn off the music and click sound
     2.5. Add a Boss mechanic. For every 10 monster a boss should appear, who is way more harder, but drops more gold
-
+    2.6 Add a reset button, so you get stronger after each run
+    2.7. Add a x10, x100 and xMAx Button fur upgrades
 3. Logic 
-    3.1 Rethink, how many hits a monster should have and how much money you should get 
+
 
 4. Bugs
-    4.1 rn a monster only get +20 hp after it dies, make it more 
