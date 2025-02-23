@@ -308,7 +308,7 @@ class GameLogic { // not public class, because per file there only can be one pu
     int calculateNextCost(){
         return (int) (((costbase + owned) *Math.pow(rategrowth, owned)));
     }
-
+//test
     // How much life has the next monster 
     int calculateNextMonster(){
         return (int) (10*(currrentZone- 1 + Math.pow(rateMonster, currrentZone-1)));
