@@ -47,8 +47,8 @@ public class IdleClickerGame {
         frame.setSize(1920, 1080);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //Background music
-        //MusicPlayer musicPlayer = new MusicPlayer();
-        //musicPlayer.playMusic("dungeonBeat.wav");
+        MusicPlayer musicPlayer = new MusicPlayer();
+        musicPlayer.playMusic("dungeonBeat.wav");
         //Font
         Font pixelifyFont = Font.createFont(Font.TRUETYPE_FONT, new File ("resources/font/PixelifySans-VariableFont_wght.ttf")).deriveFont(24f);  
 
@@ -58,6 +58,10 @@ public class IdleClickerGame {
         healthBar.setForeground(Color.RED); // Farbe der Leiste (Lebensanzeige)
         healthBar.setBackground(Color.DARK_GRAY); 
         int maxHP = healthBar.getMaximum();
+
+        
+        
+
 
 
 
@@ -125,35 +129,37 @@ public class IdleClickerGame {
         JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
         rightPanel.setBorder(BorderFactory.createEmptyBorder(40, 50, 50, 10)); // Padding
-        rightPanel.setOpaque(false); // Transparent
-
+        
         
         JLabel pointsLabel = new JLabel("Money: 0");
         pointsLabel.setFont(pixelifyFont);
-        pointsLabel.setForeground(Color.WHITE);
+        pointsLabel.setForeground(Color.BLACK);
         JLabel clickerLabel = new JLabel("Clicker Level: 1");
         clickerLabel.setFont(pixelifyFont);
-        clickerLabel.setForeground(Color.WHITE);
+        clickerLabel.setForeground(Color.BLACK);
         JLabel upgradeOptionsLabel = new JLabel("Upgrade your skills!");
         upgradeOptionsLabel.setFont(pixelifyFont);
-        upgradeOptionsLabel.setForeground(Color.WHITE);
+        upgradeOptionsLabel.setForeground(Color.BLACK);
         upgradeOptionsLabel.setFont(upgradeOptionsLabel.getFont().deriveFont(Font.BOLD));
         JLabel upgradeCostLabel = new JLabel("Upgrade Cost: 10");
         upgradeCostLabel.setFont(pixelifyFont);
-        upgradeCostLabel.setForeground(Color.WHITE);
+        upgradeCostLabel.setForeground(Color.BLACK);
         JButton clickerUpgradeButton = new JButton("Upgrade Clicker");
         clickerUpgradeButton.setMargin(new Insets(50, 175, 50, 175)); 
         clickerUpgradeButton.setFont(pixelifyFont);
         JLabel autoClickerLabel = new JLabel("Autoclicker Level: 0");
         autoClickerLabel.setFont(pixelifyFont);
-        autoClickerLabel.setForeground(Color.WHITE);
+        autoClickerLabel.setForeground(Color.BLACK);
         JLabel upgradeAutoLabel = new JLabel("Upgrade Cost: 100");
         upgradeAutoLabel.setFont(pixelifyFont);
-        upgradeAutoLabel.setForeground(Color.WHITE);
+        upgradeAutoLabel.setForeground(Color.BLACK);
         JButton autoUpgradeButton = new JButton("Upgrade Autoclicker");
         autoUpgradeButton.setMargin(new Insets(50, 175, 50, 175)); // Oben, Links, Unten, Rechts
         autoUpgradeButton.setFont(pixelifyFont);
-       
+        JScrollPane scrollPane = new JScrollPane(rightPanel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setOpaque(false);
+
         rightPanel.add(upgradeOptionsLabel);
         rightPanel.add(Box.createRigidArea(new Dimension(0, 50))); // 50px vertical distance
         rightPanel.add(pointsLabel);
@@ -171,13 +177,18 @@ public class IdleClickerGame {
         rightPanel.add(upgradeAutoLabel);
         rightPanel.add(Box.createRigidArea(new Dimension(0, 25))); // 20px vertikaler Abstand
 
+        // Effects 
+        JLabel effectLabel = new JLabel(new ImageIcon("resources/effects/clickeffect.gif"));
+        effectLabel.setVisible(false);
+      
+        mainPanel.add(effectLabel);
         
 
         //gluing everything together  ===================================================================================================================
 
 
         mainPanel.add(leftPanel, BorderLayout.WEST);
-        mainPanel.add(rightPanel, BorderLayout.EAST);
+        mainPanel.add(scrollPane, BorderLayout.EAST);
     
         frame.add(mainPanel);
         frame.setVisible(true);
@@ -201,12 +212,42 @@ public class IdleClickerGame {
             }
         });
 
+               // Timer zum Ausblenden des Effekts nach 300ms
+               Timer timer = new Timer(300, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent evt) {
+                    effectLabel.setVisible(false);
+    
+                }
+            });
+            timer.setRepeats(false);
+
+
+        mainPanel.setLayout(null);
         gifLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mousePressed(java.awt.event.MouseEvent e) {
                 gameLogic.incrementPoints(); // Simuliert den Schaden, wenn auf das Bild geklickt wird
+                Point clickPoint = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), mainPanel);
+                
+                if (timer.isRunning()) {
+                    timer.stop();
+                }
+        
+                effectLabel.setVisible(false); // Reset des alten Effekts
+                effectLabel.setBounds(clickPoint.x - effectLabel.getWidth() / 2, 
+                                      clickPoint.y - effectLabel.getHeight() / 2, 256, 264 ); // Größe des Effekts (anpassen falls nötig)
+        
+                effectLabel.setVisible(true);
+                timer.start();
+                
+
             }
+
+            
         });
+
+      
     }
 }
 

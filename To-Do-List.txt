@@ -13,6 +13,8 @@ To-Do-List:
     2.6 Add a reset button, so you get stronger after each run
     2.7. Add a x10, x100 and xMAx Button fur upgrades
 3. Logic 
+    3.1. Add more things to discover (add new mechanics)
 
 
 4. Bugs
+Haalth bar if its above 70
