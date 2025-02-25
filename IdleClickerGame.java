@@ -83,7 +83,7 @@ public class IdleClickerGame {
         //leftPanel=======================================================================================================================================
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
-        leftPanel.setBorder(BorderFactory.createEmptyBorder(150, 100, 50, 0)); // Abstand vom Rand
+        leftPanel.setBorder(BorderFactory.createEmptyBorder(50, 200, 50, 0)); // Abstand vom Rand
         leftPanel.setOpaque(false); // Transparent
 
         loadMonsterGifs();
@@ -103,19 +103,21 @@ public class IdleClickerGame {
         dmgPerSecond.setForeground(Color.WHITE);
         dmgPerSecond.setFont(pixelifyFont);
     
-
-        leftPanel.add(gifLabel);
-        leftPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         leftPanel.add(zoneLabel);
         leftPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         leftPanel.add(bossLevel);
         leftPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         leftPanel.add(dmgPerSecond);
-        leftPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        leftPanel.add(bossHealthLabel);
+        leftPanel.add(Box.createRigidArea(new Dimension(0, 100)));
+        leftPanel.add(gifLabel);
         leftPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         leftPanel.add(healthBar);
         leftPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        leftPanel.add(bossHealthLabel);
+        leftPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+    
+    
+        
        
 
         
