@@ -53,6 +53,7 @@ public class IdleClickerGame {
         Font pixelifyFont = Font.createFont(Font.TRUETYPE_FONT, new File ("resources/font/PixelifySans-VariableFont_wght.ttf")).deriveFont(24f);  
 
         JProgressBar healthBar = new JProgressBar(0, 10);
+
         healthBar.setStringPainted(true); // Prozentanzeige aktivieren
         healthBar.setForeground(Color.RED); // Farbe der Leiste (Lebensanzeige)
         healthBar.setBackground(Color.DARK_GRAY); 
@@ -101,9 +102,7 @@ public class IdleClickerGame {
         JLabel dmgPerSecond = new JLabel("Automated DMG: 0/s");
         dmgPerSecond.setForeground(Color.WHITE);
         dmgPerSecond.setFont(pixelifyFont);
-        JButton clickButton = new JButton("Fight!");
-        clickButton.setMargin(new Insets(50, 500, 50, 425)); // Oben, Links, Unten, Rechts
-        clickButton.setFont(pixelifyFont);
+    
 
         leftPanel.add(gifLabel);
         leftPanel.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -117,7 +116,7 @@ public class IdleClickerGame {
         leftPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         leftPanel.add(healthBar);
         leftPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        leftPanel.add(clickButton);
+       
 
         
         // RightPanel======================================================================================================================================
@@ -184,13 +183,9 @@ public class IdleClickerGame {
         GameLogic gameLogic = new GameLogic(pointsLabel, autoClickerLabel, clickerLabel, upgradeCostLabel,
         upgradeAutoLabel, bossHealthLabel, bossLevel, gifLabel, monsterGifs, zoneLabel, dmgPerSecond, healthBar, maxHP);
 
+        clickerUpgradeButton.setToolTipText(gameLogic.getClickerUpgradeInfo());
 
         // Buttons =====================================================================================================================================
-        clickButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                gameLogic.incrementPoints();
-            }
-        });
 
         autoUpgradeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -201,6 +196,13 @@ public class IdleClickerGame {
         clickerUpgradeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 gameLogic.upgradeClicker();
+            }
+        });
+
+        gifLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                gameLogic.incrementPoints(); // Simuliert den Schaden, wenn auf das Bild geklickt wird
             }
         });
     }
@@ -416,11 +418,11 @@ class GameLogic { // not public class, because per file there only can be one pu
     private void updateUpgradeCostLabel() {
     int nextCost = calculateNextCost();
         upgradeCostLabel.setText("Upgrade Cost: " + nextCost);
-      
-
-    
     }
-
+    public String getClickerUpgradeInfo() {
+        return "Clicker Level: " + clickerLevel + " | Cost: " + calculateNextCost();
+    }
+    
     private void updateUpgradeAutoLabel() {
         int nextAutoCost = calculateNextAutoCost1();
         upgradeAutoLabel.setText("Upgrade Cost: " + nextAutoCost);
