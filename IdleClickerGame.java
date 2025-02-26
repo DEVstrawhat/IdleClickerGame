@@ -136,6 +136,10 @@ public class IdleClickerGame {
         bossCountdownLabel.setFont(pixelifyFont);
         bossCountdownLabel.setVisible(false);
 
+        JLabel bosswarning = new JLabel ("BOSS INCOMING! If you loose you will stay in the current zone and loose 30$!");
+        bosswarning.setVisible(false);
+
+        centerPanel.add (bosswarning);
         centerPanel.add(gifLabelPanel);
         centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         centerPanel.add(healthBarPanel);
@@ -209,7 +213,7 @@ public class IdleClickerGame {
         frame.setVisible(true);
 
         GameLogic gameLogic = new GameLogic(pointsLabel, autoClickerLabel, clickerLabel, upgradeCostLabel,
-                upgradeAutoLabel, bossHealthLabel, bossLevel, gifLabel, monsterGifs, zoneLabel, dmgPerSecond, healthBar, maxHP, bossCountdownLabel);
+                upgradeAutoLabel, bossHealthLabel, bossLevel, gifLabel, monsterGifs, zoneLabel, dmgPerSecond, healthBar, maxHP, bossCountdownLabel, bosswarning);
 
         clickerUpgradeButton.setToolTipText(gameLogic.getClickerUpgradeInfo());
 
@@ -310,9 +314,10 @@ class GameLogic {
     ArrayList<ImageIcon> monsterGifs;
     private Timer autoClickTimer;
     private boolean isAutoClickerRunning = false;
+    private JLabel bosswarning;
 
     public GameLogic(JLabel pointsLabel, JLabel autoClickerLabel, JLabel clickerLabel, JLabel upgradeCostLabel,
-            JLabel upgradeAutoLabel, JLabel bossHealthLabel, JLabel bossLevel, JLabel gifLabel, ArrayList<ImageIcon> monsterGifs, JLabel zoneLabel, JLabel dmgPerSecond, JProgressBar healthBar, int maxHP, JLabel bossCountdownLabel) {
+            JLabel upgradeAutoLabel, JLabel bossHealthLabel, JLabel bossLevel, JLabel gifLabel, ArrayList<ImageIcon> monsterGifs, JLabel zoneLabel, JLabel dmgPerSecond, JProgressBar healthBar, int maxHP, JLabel bossCountdownLabel, JLabel bosswarning) {
         this.pointsLabel = pointsLabel;
         this.autoClickerLabel = autoClickerLabel;
         this.clickerLabel = clickerLabel;
@@ -327,7 +332,7 @@ class GameLogic {
         this.healthBar = healthBar;
         this.maxHP = maxHP;
         this.bossCountdownLabel = bossCountdownLabel;
-
+        this.bosswarning = bosswarning;
         healthBar.setMaximum(maxHP);
         healthBar.setValue(bossHealth);
 
@@ -380,8 +385,8 @@ class GameLogic {
         bossHealth = bossHealth - clickerLevel;
         checkBossHealth();
         updateBossHealth();        
-        //EffectPlayer effectPlayer = new EffectPlayer();
-        //effectPlayer.playEffect("slash.wav");                       
+        EffectPlayer effectPlayer = new EffectPlayer();
+        effectPlayer.playEffect("slash.wav");                       
     }
 }
 
@@ -509,6 +514,7 @@ class GameLogic {
                   isBossLevel = false;
             
                 } else {
+                bosswarning.setVisible(true);  
                 bossCountdownTime--;
                 bossCountdownLabel.setText("Time left: " + bossCountdownTime + "s");
                 
