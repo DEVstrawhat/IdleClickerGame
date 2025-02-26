@@ -60,7 +60,7 @@ public class IdleClickerGame {
         topLeftPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         topLeftPanel.setOpaque(false);
 
-        JLabel bossLevel = new JLabel("Monster level: 1");
+        JLabel bossLevel = new JLabel("Monster Level: 1");
         bossLevel.setFont(pixelifyFont);
         bossLevel.setForeground(Color.WHITE);
         bossLevel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -372,14 +372,16 @@ class GameLogic {
         return (int) (costbaseAuto1 *Math.pow(rategrowthAuto1, ownedAuto1));
     }
 
-    // Function Nr.1: Click Button
+    // Function Nr.1:Figth
     // ===================================================================================================
 
     void incrementPoints() {
         if (bossHealth > 0) { 
         bossHealth = bossHealth - clickerLevel;
         checkBossHealth();
-        updateBossHealth();                        
+        updateBossHealth();        
+        //EffectPlayer effectPlayer = new EffectPlayer();
+        //effectPlayer.playEffect("slash.wav");                       
     }
 }
 
@@ -431,7 +433,7 @@ class GameLogic {
     // Methods to update the Labels
     // =========================================================================================================
     void updateBossLevel(){
-        bossLevel.setText("Boss Level: " + bossLevelInt);
+        bossLevel.setText("Monster Level: " + bossLevelInt);
     }
 
 
@@ -491,10 +493,10 @@ class GameLogic {
                   points = Math.max(0, points -30); 
                   updatePointsLabel();
 
-                  currrentZone = 1;
                   defeatedMonsterInCurrentZone = 0;
                   updateZoneLabel();
-                  bossLevelInt =0;
+                  
+                  bossLevelInt =1;
                   updateBossLevel();
                   
                   int nextMonster = calculateNextMonster();
