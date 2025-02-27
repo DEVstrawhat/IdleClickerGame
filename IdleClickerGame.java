@@ -10,6 +10,7 @@ import java.util.Random;
 public class IdleClickerGame {
 
     private static ArrayList<ImageIcon> monsterGifs = new ArrayList<>();
+    private static ArrayList<ImageIcon> bossGifs = new ArrayList<>();
     private static int currentGifIndex = 0;
     private static Random random = new Random();
 
@@ -30,6 +31,21 @@ public class IdleClickerGame {
             for (File file : files) {
                 ImageIcon resizedIcon = resizeGif(file.getAbsolutePath(), gifWidth, gifHeight);
                 monsterGifs.add(resizedIcon);
+            }
+        }
+    }
+
+    private static void loadBossGifs() {
+        int gifWidth = 700;
+        int gifHeight = 500;
+    
+        File folder = new File("resources/boss");
+        File[] files = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".png"));
+    
+        if (files != null && files.length > 0) {
+            for (File file : files) {
+                ImageIcon resizedIcon = resizeGif(file.getAbsolutePath(), gifWidth, gifHeight);
+                bossGifs.add(resizedIcon);
             }
         }
     }
@@ -108,6 +124,7 @@ public class IdleClickerGame {
         healthBarPanel.add(Box.createHorizontalGlue());
 
         loadMonsterGifs();
+        loadBossGifs();
         currentGifIndex = random.nextInt(monsterGifs.size());
         ImageIcon gifIcon = monsterGifs.get(currentGifIndex);
         JLabel gifLabel = new JLabel(gifIcon);
@@ -136,10 +153,9 @@ public class IdleClickerGame {
         bossCountdownLabel.setFont(pixelifyFont);
         bossCountdownLabel.setVisible(false);
 
-        JLabel bosswarning = new JLabel ("BOSS INCOMING! If you loose you will stay in the current zone and loose 30$!");
-        bosswarning.setVisible(false);
+        //JLabel bosswarning = new JLabel ("BOSS INCOMING! If you loose you will stay in the current zone and loose 30$!");
+        //bosswarning.setVisible(false);
 
-        centerPanel.add (bosswarning);
         centerPanel.add(gifLabelPanel);
         centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         centerPanel.add(healthBarPanel);
@@ -213,7 +229,7 @@ public class IdleClickerGame {
         frame.setVisible(true);
 
         GameLogic gameLogic = new GameLogic(pointsLabel, autoClickerLabel, clickerLabel, upgradeCostLabel,
-                upgradeAutoLabel, bossHealthLabel, bossLevel, gifLabel, monsterGifs, zoneLabel, dmgPerSecond, healthBar, maxHP, bossCountdownLabel, bosswarning);
+                upgradeAutoLabel, bossHealthLabel, bossLevel, gifLabel, monsterGifs, zoneLabel, dmgPerSecond, healthBar, maxHP, bossCountdownLabel, bossGifs);
 
         clickerUpgradeButton.setToolTipText(gameLogic.getClickerUpgradeInfo());
 
@@ -274,7 +290,7 @@ class BackgroundPanel extends JPanel {
 }
 
 class GameLogic {
-    int points = 0;
+    int points = 100;
     int autoClickerLevel = 0;
     int autoClickerCost = 100;
     int clickerLevel = 1;
@@ -289,7 +305,7 @@ class GameLogic {
     double rateMonster = 1.55;
     int currrentZone = 1;
     int defeatedMonsterInCurrentZone = 0;
-    final int MonsterInZone = 10;
+    final int MONSTER_PER_ZONE = 10;
     double costbaseAuto1 = 50;
     double rategrowthAuto1 = 1.22;
     int ownedAuto1 = 0;
@@ -314,10 +330,10 @@ class GameLogic {
     ArrayList<ImageIcon> monsterGifs;
     private Timer autoClickTimer;
     private boolean isAutoClickerRunning = false;
-    private JLabel bosswarning;
+    ArrayList<ImageIcon> bossGifs;
 
     public GameLogic(JLabel pointsLabel, JLabel autoClickerLabel, JLabel clickerLabel, JLabel upgradeCostLabel,
-            JLabel upgradeAutoLabel, JLabel bossHealthLabel, JLabel bossLevel, JLabel gifLabel, ArrayList<ImageIcon> monsterGifs, JLabel zoneLabel, JLabel dmgPerSecond, JProgressBar healthBar, int maxHP, JLabel bossCountdownLabel, JLabel bosswarning) {
+            JLabel upgradeAutoLabel, JLabel bossHealthLabel, JLabel bossLevel, JLabel gifLabel, ArrayList<ImageIcon> monsterGifs, JLabel zoneLabel, JLabel dmgPerSecond, JProgressBar healthBar, int maxHP, JLabel bossCountdownLabel, ArrayList<ImageIcon> bossGifs) {
         this.pointsLabel = pointsLabel;
         this.autoClickerLabel = autoClickerLabel;
         this.clickerLabel = clickerLabel;
@@ -332,7 +348,7 @@ class GameLogic {
         this.healthBar = healthBar;
         this.maxHP = maxHP;
         this.bossCountdownLabel = bossCountdownLabel;
-        this.bosswarning = bosswarning;
+        this.bossGifs = bossGifs;
         healthBar.setMaximum(maxHP);
         healthBar.setValue(bossHealth);
 
@@ -366,7 +382,7 @@ class GameLogic {
 //test
     // How much life has the next monster 
     int calculateNextMonster(){
-        if ((bossLevelInt+1) % 10 == 0){
+        if (bossLevelInt % 10 == 0){
             return (int) (100* (currrentZone -1 + Math.pow(rateMonster, currrentZone-1)));
         }else 
          return (int) (10*(currrentZone- 1 + Math.pow(rateMonster, currrentZone-1)));
@@ -438,8 +454,12 @@ class GameLogic {
     // Methods to update the Labels
     // =========================================================================================================
     void updateBossLevel(){
+        if (isBossLevel){
+            bossLevel.setText("Boss Monster Level: " + bossLevelInt);
+        }else {
         bossLevel.setText("Monster Level: " + bossLevelInt);
     }
+}
 
 
     void updateBossHealth(){
@@ -485,6 +505,8 @@ class GameLogic {
         bossCountdownLabel.setVisible(true);
         bossCountdownLabel.setText("Time left: " + bossCountdownTime + "s");
 
+        updateBossLevel();
+
         bossCountdownTimer = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -498,11 +520,13 @@ class GameLogic {
                   points = Math.max(0, points -30); 
                   updatePointsLabel();
 
-                  defeatedMonsterInCurrentZone = 0;
-                  updateZoneLabel();
+                  isBossLevel = false;
                   
                   bossLevelInt =1;
                   updateBossLevel();
+
+                currentGifIndex = random.nextInt(monsterGifs.size());
+                gifLabel.setIcon(monsterGifs.get(currentGifIndex));
                   
                   int nextMonster = calculateNextMonster();
                   maxHP = nextMonster;
@@ -510,33 +534,36 @@ class GameLogic {
                   healthBar.setMaximum(maxHP);
                   healthBar.setValue(bossHealth);
                   updateBossHealth();
+
+                  defeatedMonsterInCurrentZone = 0;
+                  
               
-                  isBossLevel = false;
             
                 } else {
-                bosswarning.setVisible(true);  
                 bossCountdownTime--;
                 bossCountdownLabel.setText("Time left: " + bossCountdownTime + "s");
                 
-                }
-                  
-
-                
+                }                                
             }
         });
 
         bossCountdownTimer.start();
 
+        if (bossGifs != null && bossGifs.size() > 0) {
+            int randomBossIndex = random.nextInt(bossGifs.size());
+            gifLabel.setIcon(bossGifs.get(randomBossIndex));
+        } else {
         // Hier kannst du ein spezielles Boss-Bild laden
         ImageIcon bossIcon = new ImageIcon("resources/boss/boss_image.png");
         gifLabel.setIcon(bossIcon);
+        }
     }
     
     private void checkBossHealth(){
 
         if (bossHealth <= 0) {
-                bossHealth = 0;
-                updateBossHealth();
+            bossHealth = 0;
+            updateBossHealth();
 
                 
             if (isBossLevel) {
@@ -550,31 +577,47 @@ class GameLogic {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         defeatedMonsterInCurrentZone++;
+                        
+                        int nextProduction = calculateNextProduction();
+                        if (bossLevelInt % 10 == 0){
+                            nextProduction*=5;
+                        }
 
-                        if (defeatedMonsterInCurrentZone >= MonsterInZone){
+                        points = points + nextProduction;
+
+
+                        if (defeatedMonsterInCurrentZone >= MONSTER_PER_ZONE){
                             currrentZone++;
                             defeatedMonsterInCurrentZone =0;
+                            bossLevelInt =1;
 
+                        }else if (bossLevelInt % 10==0){
+                            bossLevelInt =1;
+                        }else {
+                            bossLevelInt++;
                         }
-                        int nextProduction = calculateNextProduction();
+
+                        boolean nextIsBoss = (bossLevelInt == 10 && defeatedMonsterInCurrentZone == MONSTER_PER_ZONE - 1);
+
                         int nextMonster = calculateNextMonster();
-                        bossLevelInt++;
+                        
                         maxHP = nextMonster;
                         bossHealth = bossHealth + nextMonster;
                         healthBar.setMaximum(maxHP);
                         healthBar.setValue(Math.max(0, bossHealth));
-                        points = points + nextProduction;
+                        
                         updateBossHealth();
                         updateBossLevel();
                         updatePointsLabel();
                         updateZoneLabel();
                         
+                        if (nextIsBoss) {
+                            // Starte Boss-Level, wenn es das 10. Monster ist und alle Monster in der Zone besiegt wurden
+                            startBossLevel();
+                        } else {
                         
                         currentGifIndex = random.nextInt(monsterGifs.size());
                         gifLabel.setIcon(monsterGifs.get(currentGifIndex));
-                       
-                        if (bossLevelInt % 10 == 0) {
-                            startBossLevel();
                         }
                     }
                 });
