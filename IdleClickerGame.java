@@ -290,7 +290,7 @@ class BackgroundPanel extends JPanel {
 }
 
 class GameLogic {
-    int points = 100;
+    int points = 0;
     int autoClickerLevel = 0;
     int autoClickerCost = 100;
     int clickerLevel = 1;
@@ -331,6 +331,7 @@ class GameLogic {
     private Timer autoClickTimer;
     private boolean isAutoClickerRunning = false;
     ArrayList<ImageIcon> bossGifs;
+    private boolean isMonsteralive = true;
 
     public GameLogic(JLabel pointsLabel, JLabel autoClickerLabel, JLabel clickerLabel, JLabel upgradeCostLabel,
             JLabel upgradeAutoLabel, JLabel bossHealthLabel, JLabel bossLevel, JLabel gifLabel, ArrayList<ImageIcon> monsterGifs, JLabel zoneLabel, JLabel dmgPerSecond, JProgressBar healthBar, int maxHP, JLabel bossCountdownLabel, ArrayList<ImageIcon> bossGifs) {
@@ -357,10 +358,13 @@ class GameLogic {
 
         autoClickTimer = new Timer(1000, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                
+                if (isMonsteralive) {
                 points += autoClickerLevel;
                 bossHealth = bossHealth - (5 * ownedAuto1);
                 updateBossHealth();
                 checkBossHealth();
+                }
             }
         });
 
@@ -397,7 +401,7 @@ class GameLogic {
     // ===================================================================================================
 
     void incrementPoints() {
-        if (bossHealth > 0) { 
+        if (isMonsteralive && bossHealth > 0) { 
         bossHealth = bossHealth - clickerLevel;
         checkBossHealth();
         updateBossHealth();        
@@ -455,7 +459,7 @@ class GameLogic {
     // =========================================================================================================
     void updateBossLevel(){
         if (isBossLevel){
-            bossLevel.setText("Boss Monster Level: " + bossLevelInt);
+            bossLevel.setText("Boss Monster Level: " + currrentZone);
         }else {
         bossLevel.setText("Monster Level: " + bossLevelInt);
     }
@@ -564,6 +568,7 @@ class GameLogic {
         if (bossHealth <= 0) {
             bossHealth = 0;
             updateBossHealth();
+            isMonsteralive = false;
 
                 
             if (isBossLevel) {
@@ -619,6 +624,7 @@ class GameLogic {
                         currentGifIndex = random.nextInt(monsterGifs.size());
                         gifLabel.setIcon(monsterGifs.get(currentGifIndex));
                         }
+                        isMonsteralive = true;
                     }
                 });
                 deathTimer.setRepeats(false); // Timer soll nur einmal ausgeführt werden
