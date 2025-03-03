@@ -50,46 +50,60 @@ public class IdleClickerGame {
         }
     }
 
+
     public static void main(String[] args) throws FontFormatException, IOException {
         JFrame frame = new JFrame("Idle MonsterHunter");
         frame.setSize(1920, 1080);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        MusicPlayer musicPlayer = new MusicPlayer();
-        musicPlayer.playMusic("dungeonBeat.wav");
+        //MusicPlayer musicPlayer = new MusicPlayer();
+        //musicPlayer.playMusic("dungeonBeat.wav");
 
         Font pixelifyFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources/font/PixelifySans-VariableFont_wght.ttf")).deriveFont(24f);
+
+
+
+        // UI Layout =====================================================================================================
+
+        /*
+         * 1. Main Panel 
+         *  1.1 left Panel 
+         *      1.1.1 topleft Panel (including zone label, monster level label, automated dmg label)
+         *      1.1.2  center Panel (including monster- and boss png, health progressbar and health label )
+         *      1.1.3 topright Panel (including hint label)
+         * 1.2 right Panel (including all upgarde labels)
+         */
 
         JPanel mainPanel = new BackgroundPanel("resources/background/backgroundimage.jpg");
         mainPanel.setLayout(new BorderLayout());
 
+        // 1.1 left Panel ===================================================================================================
+
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new BorderLayout());
-        leftPanel.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 0));
+        leftPanel.setBorder(BorderFactory.createEmptyBorder(50, 0, 50, 0));
         leftPanel.setOpaque(false);
+
+            // 1.1.1 topleft Panel ============================================================================================
 
         JPanel topWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 25, 0));
         topWrapper.setOpaque(false);
 
         JPanel topLeftPanel = new JPanel();
         topLeftPanel.setLayout(new BoxLayout(topLeftPanel, BoxLayout.Y_AXIS));
-        topLeftPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         topLeftPanel.setOpaque(false);
 
         JLabel bossLevel = new JLabel("Monster Level: 1");
         bossLevel.setFont(pixelifyFont);
         bossLevel.setForeground(Color.WHITE);
-        bossLevel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JLabel zoneLabel = new JLabel("Zone: 1");
         zoneLabel.setForeground(Color.WHITE);
         zoneLabel.setFont(pixelifyFont);
-        zoneLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JLabel dmgPerSecond = new JLabel("Automated DMG: 0/s");
         dmgPerSecond.setForeground(Color.WHITE);
         dmgPerSecond.setFont(pixelifyFont);
-        dmgPerSecond.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         topLeftPanel.add(zoneLabel);
         topLeftPanel.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -99,13 +113,15 @@ public class IdleClickerGame {
 
         topWrapper.add(topLeftPanel);
 
+        // 1.1.2. center Panel =======================================================================================================
+
         JPanel centerWrapper = new JPanel(new GridBagLayout());
         centerWrapper.setOpaque(false);
 
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         centerPanel.setOpaque(false);
-        centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 200, 40, 0));
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 40, 0));
         centerPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JProgressBar healthBar = new JProgressBar(0, 10);
@@ -153,9 +169,6 @@ public class IdleClickerGame {
         bossCountdownLabel.setFont(pixelifyFont);
         bossCountdownLabel.setVisible(false);
 
-        //JLabel bosswarning = new JLabel ("BOSS INCOMING! If you loose you will stay in the current zone and loose 30$!");
-        //bosswarning.setVisible(false);
-
         centerPanel.add(gifLabelPanel);
         centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         centerPanel.add(healthBarPanel);
@@ -165,38 +178,83 @@ public class IdleClickerGame {
 
         centerWrapper.add(centerPanel);
 
-        leftPanel.add(topWrapper, BorderLayout.NORTH);
+            //1.1.3 North Panel =================================================================================================
+        
+        JPanel northPanel = new JPanel();
+        northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.X_AXIS));
+        northPanel.setOpaque(false);
+
+        JLabel hintLabel = new JLabel(" This is a test message, to see if the hint panel is working properly!");
+        hintLabel.setFont(pixelifyFont);
+        hintLabel.setBorder(BorderFactory.createEmptyBorder(25, 200,0 ,0 ));
+        hintLabel.setForeground(Color.WHITE);
+        hintLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        hintLabel.setVisible(true);
+
+        JButton settingsButton = new JButton("Settings");
+        settingsButton.setFont(pixelifyFont);
+        settingsButton.setForeground(Color.BLACK);
+        settingsButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        
+        JButton achievementButton = new JButton("Achievements");
+        achievementButton.setFont(pixelifyFont);
+        achievementButton.setForeground(Color.BLACK);
+        achievementButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
+
+
+        northPanel.add(hintLabel);
+        northPanel.add(Box.createRigidArea(new Dimension(500, 0)));
+        northPanel.add(achievementButton);
+        northPanel.add(Box.createRigidArea(new Dimension(25, 0)));
+        northPanel.add(settingsButton);
+
+        JPanel toprigthWrapper = new JPanel(new FlowLayout(FlowLayout.RIGHT, 25, 0));
+
+        toprigthWrapper.add(northPanel);
+
+        leftPanel.add(topWrapper, BorderLayout.WEST);
         leftPanel.add(centerWrapper, BorderLayout.CENTER);
+
+
+        // 1.2 right Panel =======================================================================================================
 
         JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
-        rightPanel.setBorder(BorderFactory.createEmptyBorder(40, 50, 50, 10));
+        rightPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 50, 0));
 
         JLabel pointsLabel = new JLabel("Money: 0");
         pointsLabel.setFont(pixelifyFont);
         pointsLabel.setForeground(Color.BLACK);
+
         JLabel clickerLabel = new JLabel("Clicker Level: 1");
         clickerLabel.setFont(pixelifyFont);
         clickerLabel.setForeground(Color.BLACK);
+
         JLabel upgradeOptionsLabel = new JLabel("Upgrade your skills!");
         upgradeOptionsLabel.setFont(pixelifyFont);
         upgradeOptionsLabel.setForeground(Color.BLACK);
         upgradeOptionsLabel.setFont(upgradeOptionsLabel.getFont().deriveFont(Font.BOLD));
+
         JLabel upgradeCostLabel = new JLabel("Upgrade Cost: 10");
         upgradeCostLabel.setFont(pixelifyFont);
         upgradeCostLabel.setForeground(Color.BLACK);
+
         JButton clickerUpgradeButton = new JButton("Upgrade Clicker");
         clickerUpgradeButton.setMargin(new Insets(50, 175, 50, 175));
         clickerUpgradeButton.setFont(pixelifyFont);
+
         JLabel autoClickerLabel = new JLabel("Autoclicker Level: 0");
         autoClickerLabel.setFont(pixelifyFont);
         autoClickerLabel.setForeground(Color.BLACK);
+
         JLabel upgradeAutoLabel = new JLabel("Upgrade Cost: 100");
         upgradeAutoLabel.setFont(pixelifyFont);
         upgradeAutoLabel.setForeground(Color.BLACK);
+
         JButton autoUpgradeButton = new JButton("Upgrade Autoclicker");
         autoUpgradeButton.setMargin(new Insets(50, 175, 50, 175));
         autoUpgradeButton.setFont(pixelifyFont);
+
         JScrollPane scrollPane = new JScrollPane(rightPanel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setOpaque(false);
@@ -224,6 +282,7 @@ public class IdleClickerGame {
         mainPanel.add(effectLabel);
         mainPanel.add(leftPanel, BorderLayout.WEST);
         mainPanel.add(scrollPane, BorderLayout.EAST);
+        mainPanel.add(northPanel, BorderLayout.NORTH);
 
         frame.add(mainPanel);
         frame.setVisible(true);
@@ -232,6 +291,9 @@ public class IdleClickerGame {
                 upgradeAutoLabel, bossHealthLabel, bossLevel, gifLabel, monsterGifs, zoneLabel, dmgPerSecond, healthBar, maxHP, bossCountdownLabel, bossGifs);
 
         clickerUpgradeButton.setToolTipText(gameLogic.getClickerUpgradeInfo());
+
+
+        // Action performed when clicking a button or clicking with the mouse =========================================================
 
         autoUpgradeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -289,7 +351,12 @@ class BackgroundPanel extends JPanel {
     }
 }
 
+
+// Game Logic ========================================================================================================================
+
 class GameLogic {
+
+    // ints =======================================================================================================================
     int points = 0;
     int autoClickerLevel = 0;
     int autoClickerCost = 100;
@@ -310,6 +377,8 @@ class GameLogic {
     double rategrowthAuto1 = 1.22;
     int ownedAuto1 = 0;
     int maxHP;
+
+    // Labels, Timer and booleans ==================================================================================================
 
     private JLabel pointsLabel;
     private JLabel autoClickerLabel;
@@ -332,6 +401,9 @@ class GameLogic {
     private boolean isAutoClickerRunning = false;
     ArrayList<ImageIcon> bossGifs;
     private boolean isMonsteralive = true;
+
+
+    //connecting the labels in game logic wiht the labels in class main ==================================================================
 
     public GameLogic(JLabel pointsLabel, JLabel autoClickerLabel, JLabel clickerLabel, JLabel upgradeCostLabel,
             JLabel upgradeAutoLabel, JLabel bossHealthLabel, JLabel bossLevel, JLabel gifLabel, ArrayList<ImageIcon> monsterGifs, JLabel zoneLabel, JLabel dmgPerSecond, JProgressBar healthBar, int maxHP, JLabel bossCountdownLabel, ArrayList<ImageIcon> bossGifs) {
