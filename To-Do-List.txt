@@ -4,16 +4,15 @@ To-Do-List:
 
 2. Functionality 
     2.2 Add effects to the game 
-        2.2.1 If a monster is hit
         2.2.2. If you upgrade something 
     2.3 Add an Arraylist of different Background images. For example after every 10 monsters a new background appear.
     2.4. Add achievments 
     2.5. add settings, where you can turn off the music and click sound
-    2.5. Add a Boss mechanic. For every 10 monster a boss should appear, who is way more harder, but drops more gold
     2.6 Add a reset button, so you get stronger after each run
     2.7. Add a x10, x100 and xMAx Button fur upgrades
 3. Logic 
     3.1. Add more things to discover (add new mechanics)
+    3.2. After Zone 10 drop an item, which has some improvement
 
 
 4. Bugs

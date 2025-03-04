@@ -50,6 +50,7 @@ public class IdleClickerGame {
         }
     }
 
+   
 
     public static void main(String[] args) throws FontFormatException, IOException {
         JFrame frame = new JFrame("Idle MonsterHunter");
@@ -59,8 +60,23 @@ public class IdleClickerGame {
         //MusicPlayer musicPlayer = new MusicPlayer();
         //musicPlayer.playMusic("dungeonBeat.wav");
 
-        Font pixelifyFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources/font/PixelifySans-VariableFont_wght.ttf")).deriveFont(24f);
+        Font pixelifyFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources/font/BitPotionExt.ttf")).deriveFont(35f);
 
+
+        // BAckground for UI UpgradePanel
+        class BackgroundPanel extends JPanel {
+        private Image backgroundImage;
+
+        public BackgroundPanel(String filePath) {
+        backgroundImage = new ImageIcon(filePath).getImage();
+            }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+    }
+}
 
 
         // UI Layout =====================================================================================================
@@ -74,14 +90,15 @@ public class IdleClickerGame {
          * 1.2 right Panel (including all upgarde labels)
          */
 
-        JPanel mainPanel = new BackgroundPanel("resources/background/backgroundimage.jpg");
+        JPanel mainPanel = new JPanel();
+        mainPanel.setBackground(Color.BLACK);
         mainPanel.setLayout(new BorderLayout());
 
         // 1.1 left Panel ===================================================================================================
 
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new BorderLayout());
-        leftPanel.setBorder(BorderFactory.createEmptyBorder(50, 0, 50, 0));
+        leftPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
         leftPanel.setOpaque(false);
 
             // 1.1.1 topleft Panel ============================================================================================
@@ -121,13 +138,13 @@ public class IdleClickerGame {
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         centerPanel.setOpaque(false);
-        centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 40, 0));
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 50, 0, 0));
         centerPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JProgressBar healthBar = new JProgressBar(0, 10);
         healthBar.setStringPainted(true);
-        healthBar.setForeground(Color.RED);
-        healthBar.setBackground(Color.DARK_GRAY);
+        healthBar.setForeground(Color.WHITE);
+        healthBar.setBackground(Color.BLACK);
         healthBar.setPreferredSize(new Dimension(500, 20));
         int maxHP = healthBar.getMaximum();
 
@@ -153,6 +170,14 @@ public class IdleClickerGame {
         gifLabelPanel.add(gifLabel);
         gifLabelPanel.add(Box.createHorizontalGlue());
 
+        
+        JLabel hintLabel = new JLabel(" This is a test message, to see if the hint panel is working properly!");
+        hintLabel.setFont(pixelifyFont);
+        hintLabel.setBorder(BorderFactory.createEmptyBorder(25, 0,0 ,0 ));
+        hintLabel.setForeground(Color.WHITE);
+        hintLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        hintLabel.setVisible(true);
+
         JLabel bossHealthLabel = new JLabel("Health: 10");
         bossHealthLabel.setForeground(Color.WHITE);
         bossHealthLabel.setFont(pixelifyFont);
@@ -169,6 +194,8 @@ public class IdleClickerGame {
         bossCountdownLabel.setFont(pixelifyFont);
         bossCountdownLabel.setVisible(false);
 
+        centerPanel.add(hintLabel);
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         centerPanel.add(gifLabelPanel);
         centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         centerPanel.add(healthBarPanel);
@@ -178,66 +205,47 @@ public class IdleClickerGame {
 
         centerWrapper.add(centerPanel);
 
-            //1.1.3 North Panel =================================================================================================
-        
-        JPanel northPanel = new JPanel();
-        northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.X_AXIS));
-        northPanel.setOpaque(false);
+    
 
-        JLabel hintLabel = new JLabel(" This is a test message, to see if the hint panel is working properly!");
-        hintLabel.setFont(pixelifyFont);
-        hintLabel.setBorder(BorderFactory.createEmptyBorder(25, 200,0 ,0 ));
-        hintLabel.setForeground(Color.WHITE);
-        hintLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        hintLabel.setVisible(true);
-
-        JButton settingsButton = new JButton("Settings");
-        settingsButton.setFont(pixelifyFont);
-        settingsButton.setForeground(Color.BLACK);
-        settingsButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        
-        JButton achievementButton = new JButton("Achievements");
-        achievementButton.setFont(pixelifyFont);
-        achievementButton.setForeground(Color.BLACK);
-        achievementButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
-
-
-        northPanel.add(hintLabel);
-        northPanel.add(Box.createRigidArea(new Dimension(500, 0)));
-        northPanel.add(achievementButton);
-        northPanel.add(Box.createRigidArea(new Dimension(25, 0)));
-        northPanel.add(settingsButton);
-
-        JPanel toprigthWrapper = new JPanel(new FlowLayout(FlowLayout.RIGHT, 25, 0));
-
-        toprigthWrapper.add(northPanel);
 
         leftPanel.add(topWrapper, BorderLayout.WEST);
         leftPanel.add(centerWrapper, BorderLayout.CENTER);
 
 
+
+       
         // 1.2 right Panel =======================================================================================================
 
-        JPanel rightPanel = new JPanel();
+        JPanel rightPanel = new BackgroundPanel("resources/ui/uipanelupgrades.png");
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
-        rightPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 50, 0));
+        rightPanel.setBorder(BorderFactory.createEmptyBorder(50, 0, 0, 0));
+        rightPanel.setForeground(Color.WHITE);
+        rightPanel.setPreferredSize(new Dimension(700, 300));
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        
+        buttonPanel.setPreferredSize(new Dimension(1075, 75));
+        buttonPanel.setMaximumSize(new Dimension(1075,75));
+
+        buttonPanel.setOpaque(false);
 
         JLabel pointsLabel = new JLabel("Money: 0");
         pointsLabel.setFont(pixelifyFont);
-        pointsLabel.setForeground(Color.BLACK);
+        pointsLabel.setForeground(Color.WHITE);
 
         JLabel clickerLabel = new JLabel("Clicker Level: 1");
         clickerLabel.setFont(pixelifyFont);
-        clickerLabel.setForeground(Color.BLACK);
+        clickerLabel.setForeground(Color.WHITE);
 
         JLabel upgradeOptionsLabel = new JLabel("Upgrade your skills!");
         upgradeOptionsLabel.setFont(pixelifyFont);
-        upgradeOptionsLabel.setForeground(Color.BLACK);
+        upgradeOptionsLabel.setForeground(Color.WHITE);
         upgradeOptionsLabel.setFont(upgradeOptionsLabel.getFont().deriveFont(Font.BOLD));
 
         JLabel upgradeCostLabel = new JLabel("Upgrade Cost: 10");
         upgradeCostLabel.setFont(pixelifyFont);
-        upgradeCostLabel.setForeground(Color.BLACK);
+        upgradeCostLabel.setForeground(Color.WHITE);
 
         JButton clickerUpgradeButton = new JButton("Upgrade Clicker");
         clickerUpgradeButton.setMargin(new Insets(50, 175, 50, 175));
@@ -245,11 +253,11 @@ public class IdleClickerGame {
 
         JLabel autoClickerLabel = new JLabel("Autoclicker Level: 0");
         autoClickerLabel.setFont(pixelifyFont);
-        autoClickerLabel.setForeground(Color.BLACK);
+        autoClickerLabel.setForeground(Color.WHITE);
 
         JLabel upgradeAutoLabel = new JLabel("Upgrade Cost: 100");
         upgradeAutoLabel.setFont(pixelifyFont);
-        upgradeAutoLabel.setForeground(Color.BLACK);
+        upgradeAutoLabel.setForeground(Color.WHITE);
 
         JButton autoUpgradeButton = new JButton("Upgrade Autoclicker");
         autoUpgradeButton.setMargin(new Insets(50, 175, 50, 175));
@@ -258,7 +266,31 @@ public class IdleClickerGame {
         JScrollPane scrollPane = new JScrollPane(rightPanel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setOpaque(false);
+        
+        ImageIcon settings = new ImageIcon("resources/ui/settings.png");
+        settings.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH); // Passe die Größe an
 
+        JButton settingsButton = new JButton(settings);
+        settingsButton.setPreferredSize(new Dimension(60, 60)); // Gleiche Größe wie das Bild
+        settingsButton.setMinimumSize(new Dimension(60, 60));
+        settingsButton.setMaximumSize(new Dimension(60, 60));
+        settingsButton.setFont(pixelifyFont);
+        settingsButton.setForeground(Color.BLACK);
+
+        ImageIcon achievement = new ImageIcon("resources/ui/achievements.png");
+        achievement.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH); // Passe die Größe an
+
+        JButton achievementButton = new JButton(achievement);
+        achievementButton.setPreferredSize(new Dimension(60, 60)); // Gleiche Größe wie das Bild
+        achievementButton.setMinimumSize(new Dimension(60, 60));
+        achievementButton.setMaximumSize(new Dimension(60, 60));
+        achievementButton.setFont(pixelifyFont);
+        achievementButton.setForeground(Color.BLACK);
+
+        buttonPanel.add(achievementButton);
+        buttonPanel.add(settingsButton);
+
+        rightPanel.add(buttonPanel);
         rightPanel.add(upgradeOptionsLabel);
         rightPanel.add(Box.createRigidArea(new Dimension(0, 50)));
         rightPanel.add(pointsLabel);
@@ -282,7 +314,6 @@ public class IdleClickerGame {
         mainPanel.add(effectLabel);
         mainPanel.add(leftPanel, BorderLayout.WEST);
         mainPanel.add(scrollPane, BorderLayout.EAST);
-        mainPanel.add(northPanel, BorderLayout.NORTH);
 
         frame.add(mainPanel);
         frame.setVisible(true);
@@ -307,12 +338,25 @@ public class IdleClickerGame {
             }
         });
 
+
+        settingsButton.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                gameLogic.openSettingsLabel();
+            }
+        });
+
+
+
+
+
         Timer timer = new Timer(300, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 effectLabel.setVisible(false);
             }
         });
+
+
         timer.setRepeats(false);
 
         mainPanel.setLayout(null);
@@ -337,19 +381,7 @@ public class IdleClickerGame {
     }
 }
 
-class BackgroundPanel extends JPanel {
-    private Image backgroundImage;
 
-    public BackgroundPanel(String imagePath) {
-        this.backgroundImage = new ImageIcon(imagePath).getImage();
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
-    }
-}
 
 
 // Game Logic ========================================================================================================================
@@ -525,6 +557,13 @@ class GameLogic {
     void startAutoclicker() {
         autoClickTimer.start();
     }
+
+    // Function 4: Settings ====================================================================================================
+
+     void openSettingsLabel(){
+             
+     }
+
 
 
     // Methods to update the Labels
