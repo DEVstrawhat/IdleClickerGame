@@ -230,7 +230,7 @@ public class IdleClickerGame {
 
         buttonPanel.setOpaque(false);
 
-        JLabel pointsLabel = new JLabel("Money: 0");
+        JLabel pointsLabel = new JLabel("Money: 0$");
         pointsLabel.setFont(pixelifyFont);
         pointsLabel.setForeground(Color.WHITE);
 
@@ -525,8 +525,11 @@ class GameLogic {
         EffectPlayer effectPlayer = new EffectPlayer();
         effectPlayer.playEffect("slash.wav");                       
     }
-
-    
+    if  (points == 5 ){
+        hintLabelTimer.start();
+        hintLabel.setText("You have gained 5$. Click the Upgrade Clicker Button to get stronger.");
+        hintLabel.setVisible(true); 
+    }
 }
 
 
@@ -609,7 +612,7 @@ class GameLogic {
     }
 
     void updatePointsLabel() {
-        pointsLabel.setText("Money: " + points);
+        pointsLabel.setText( "Money: " + points + "$");
     }
 
     void updateDmgPerSecond(){
