@@ -176,7 +176,7 @@ public class IdleClickerGame {
         hintLabel.setBorder(BorderFactory.createEmptyBorder(25, 0,0 ,0 ));
         hintLabel.setForeground(Color.WHITE);
         hintLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        hintLabel.setVisible(true);
+        hintLabel.setVisible(false);
 
         JLabel bossHealthLabel = new JLabel("Health: 10");
         bossHealthLabel.setForeground(Color.WHITE);
@@ -319,7 +319,7 @@ public class IdleClickerGame {
         frame.setVisible(true);
 
         GameLogic gameLogic = new GameLogic(pointsLabel, autoClickerLabel, clickerLabel, upgradeCostLabel,
-                upgradeAutoLabel, bossHealthLabel, bossLevel, gifLabel, monsterGifs, zoneLabel, dmgPerSecond, healthBar, maxHP, bossCountdownLabel, bossGifs);
+                upgradeAutoLabel, bossHealthLabel, bossLevel, gifLabel, monsterGifs, zoneLabel, dmgPerSecond, healthBar, maxHP, bossCountdownLabel, bossGifs, hintLabel);
 
         clickerUpgradeButton.setToolTipText(gameLogic.getClickerUpgradeInfo());
 
@@ -409,6 +409,8 @@ class GameLogic {
     double rategrowthAuto1 = 1.22;
     int ownedAuto1 = 0;
     int maxHP;
+    int nextCost = calculateNextCost();
+
 
     // Labels, Timer and booleans ==================================================================================================
 
@@ -433,12 +435,14 @@ class GameLogic {
     private boolean isAutoClickerRunning = false;
     ArrayList<ImageIcon> bossGifs;
     private boolean isMonsteralive = true;
+    private JLabel hintLabel;
+    private Timer hintLabelTimer;
 
 
     //connecting the labels in game logic wiht the labels in class main ==================================================================
 
     public GameLogic(JLabel pointsLabel, JLabel autoClickerLabel, JLabel clickerLabel, JLabel upgradeCostLabel,
-            JLabel upgradeAutoLabel, JLabel bossHealthLabel, JLabel bossLevel, JLabel gifLabel, ArrayList<ImageIcon> monsterGifs, JLabel zoneLabel, JLabel dmgPerSecond, JProgressBar healthBar, int maxHP, JLabel bossCountdownLabel, ArrayList<ImageIcon> bossGifs) {
+            JLabel upgradeAutoLabel, JLabel bossHealthLabel, JLabel bossLevel, JLabel gifLabel, ArrayList<ImageIcon> monsterGifs, JLabel zoneLabel, JLabel dmgPerSecond, JProgressBar healthBar, int maxHP, JLabel bossCountdownLabel, ArrayList<ImageIcon> bossGifs, JLabel hintLabel) {
         this.pointsLabel = pointsLabel;
         this.autoClickerLabel = autoClickerLabel;
         this.clickerLabel = clickerLabel;
@@ -454,6 +458,7 @@ class GameLogic {
         this.maxHP = maxHP;
         this.bossCountdownLabel = bossCountdownLabel;
         this.bossGifs = bossGifs;
+        this.hintLabel = hintLabel;
         healthBar.setMaximum(maxHP);
         healthBar.setValue(bossHealth);
 
@@ -472,7 +477,15 @@ class GameLogic {
             }
         });
 
-      
+        hintLabelTimer = new Timer (3000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                hintLabel.setVisible(false);
+                hintLabelTimer.stop();
+            }
+        });
+        hintLabelTimer.setRepeats(false);
+
     }
         
      
@@ -512,6 +525,8 @@ class GameLogic {
         EffectPlayer effectPlayer = new EffectPlayer();
         effectPlayer.playEffect("slash.wav");                       
     }
+
+    
 }
 
 
@@ -519,7 +534,6 @@ class GameLogic {
     // ==============================================================================================
 
     void upgradeClicker() {
-        int nextCost = calculateNextCost();
         if (points >= nextCost) {
             points -= nextCost;
             clickerLevel++;
@@ -528,7 +542,11 @@ class GameLogic {
             updateClickerLabel();
             updateUpgradeCostLabel();
             
-        }
+        } else {
+            hintLabelTimer.start();
+            hintLabel.setText("You dont have enough money to buy the next clicker upgrade.");
+            hintLabel.setVisible(true);
+            }  
     }
 
     // Function Nr.3: Autoclicker
@@ -547,11 +565,18 @@ class GameLogic {
             updateUpgradeAutoLabel();
             updateDmgPerSecond();
 
+
             if (!isAutoClickerRunning) {
                 startAutoclicker();
                 isAutoClickerRunning = true;
             }
-        }
+        } else {
+            hintLabelTimer.start();
+            hintLabel.setText("You dont have enough money to buy the next auto upgrade.");
+            hintLabel.setVisible(true);
+            }  
+
+    
     }
 
     void startAutoclicker() {
@@ -576,6 +601,7 @@ class GameLogic {
     }
 }
 
+       
 
     void updateBossHealth(){
         bossHealthLabel.setText("Health: " + bossHealth);
