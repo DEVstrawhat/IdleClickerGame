@@ -94,21 +94,15 @@ public class IdleClickerGame {
         mainPanel.setBackground(Color.BLACK);
         mainPanel.setLayout(new BorderLayout());
 
-        // 1.1 left Panel ===================================================================================================
 
-        JPanel leftPanel = new JPanel();
-        leftPanel.setLayout(new BorderLayout());
-        leftPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
-        leftPanel.setOpaque(false);
+            // 1.1.1 North Panel ============================================================================================
 
-            // 1.1.1 topleft Panel ============================================================================================
 
-        JPanel topWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 25, 0));
-        topWrapper.setOpaque(false);
+        JPanel northPanel = new JPanel();
+        northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.X_AXIS));
+        northPanel.setBorder(BorderFactory.createEmptyBorder(10, 25, 0, 0));
 
-        JPanel topLeftPanel = new JPanel();
-        topLeftPanel.setLayout(new BoxLayout(topLeftPanel, BoxLayout.Y_AXIS));
-        topLeftPanel.setOpaque(false);
+        northPanel.setOpaque(false);
 
         JLabel bossLevel = new JLabel("Monster Level: 1");
         bossLevel.setFont(pixelifyFont);
@@ -126,26 +120,30 @@ public class IdleClickerGame {
         pointsPerMonster.setForeground(Color.WHITE);
         pointsPerMonster.setFont(pixelifyFont);
 
-        topLeftPanel.add(zoneLabel);
-        topLeftPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        topLeftPanel.add(bossLevel);
-        topLeftPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        topLeftPanel.add(dmgPerSecond);
-        topLeftPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        topLeftPanel.add(pointsPerMonster);
+        JLabel hintLabel = new JLabel(" This is a test message, to see if the hint panel is working properly!");
+        hintLabel.setFont(pixelifyFont);
+        hintLabel.setForeground(Color.RED);
+        hintLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        hintLabel.setVisible(false);
+
+        northPanel.add(zoneLabel);
+        northPanel.add(Box.createRigidArea(new Dimension(50, 25)));
+        northPanel.add(bossLevel);
+        northPanel.add(Box.createRigidArea(new Dimension(50, 25)));
+        northPanel.add(dmgPerSecond);
+        northPanel.add(Box.createRigidArea(new Dimension(50,25)));
+        northPanel.add(pointsPerMonster);
+        northPanel.add(Box.createRigidArea(new Dimension(50,25)));
+        northPanel.add(hintLabel);
 
 
-        topWrapper.add(topLeftPanel);
 
         // 1.1.2. center Panel =======================================================================================================
-
-        JPanel centerWrapper = new JPanel(new GridBagLayout());
-        centerWrapper.setOpaque(false);
 
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         centerPanel.setOpaque(false);
-        centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 50, 0, 0));
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(225, 0, 0, 0));
         centerPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JProgressBar healthBar = new JProgressBar(0, 10);
@@ -159,7 +157,7 @@ public class IdleClickerGame {
         healthBarPanel.setLayout(new BoxLayout(healthBarPanel, BoxLayout.X_AXIS));
         healthBarPanel.setOpaque(false);
         healthBarPanel.add(Box.createHorizontalGlue());
-        healthBar.setMaximumSize(new Dimension(500, 20));
+        healthBar.setMaximumSize(new Dimension(700, 20));
         healthBarPanel.add(healthBar);
         healthBarPanel.add(Box.createHorizontalGlue());
 
@@ -178,12 +176,7 @@ public class IdleClickerGame {
         gifLabelPanel.add(Box.createHorizontalGlue());
 
         
-        JLabel hintLabel = new JLabel(" This is a test message, to see if the hint panel is working properly!");
-        hintLabel.setFont(pixelifyFont);
-        hintLabel.setBorder(BorderFactory.createEmptyBorder(25, 0,0 ,0 ));
-        hintLabel.setForeground(Color.WHITE);
-        hintLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        hintLabel.setVisible(false);
+        
 
         JLabel bossHealthLabel = new JLabel("Health: 10");
         bossHealthLabel.setForeground(Color.WHITE);
@@ -201,24 +194,12 @@ public class IdleClickerGame {
         bossCountdownLabel.setFont(pixelifyFont);
         bossCountdownLabel.setVisible(false);
 
-        centerPanel.add(hintLabel);
-        centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         centerPanel.add(gifLabelPanel);
         centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         centerPanel.add(healthBarPanel);
         centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         centerPanel.add(bossHealthPanel);
         centerPanel.add(bossCountdownLabel);
-
-        centerWrapper.add(centerPanel);
-
-    
-
-
-        leftPanel.add(topWrapper, BorderLayout.WEST);
-        leftPanel.add(centerWrapper, BorderLayout.CENTER);
-
-
 
        
         // 1.2 right Panel =======================================================================================================
@@ -319,7 +300,8 @@ public class IdleClickerGame {
         effectLabel.setVisible(false);
 
         mainPanel.add(effectLabel);
-        mainPanel.add(leftPanel, BorderLayout.WEST);
+        mainPanel.add(northPanel, BorderLayout.NORTH);
+        mainPanel.add(centerPanel, BorderLayout.CENTER);
         mainPanel.add(scrollPane, BorderLayout.EAST);
 
         frame.add(mainPanel);
@@ -417,6 +399,7 @@ class GameLogic {
     int ownedAuto1 = 0;
     int maxHP;
     int nextCost = calculateNextCost();
+    int nextProduction = calculateNextProduction();
     
 
 
@@ -613,7 +596,7 @@ class GameLogic {
 }
 
     void updatePointsPerMonster(){
-        pointsPerMonster.setText("Money/Monster: " + calculateNextProduction() +"/$");
+        pointsPerMonster.setText("Money/Monster: " + calculateNextProduction() +"$");
 
     }
        
@@ -628,13 +611,13 @@ class GameLogic {
 
         if  (points >= 5 && !hintAt5PointsShown){
             hintLabelTimer.start();
-            hintLabel.setText("You earned 5$. Click the Upgrade Clicker Button to get stronger.");
+            hintLabel.setText("You earned 5$. You can buy your first clickerupgrade.");
             hintLabel.setVisible(true); 
             hintAt5PointsShown = true; // Mark this hint as shown
         }
         if  (points >= 50 && !hintAt50PointsShown){
             hintLabelTimer.start();
-            hintLabel.setText("You earned 50$. Click the Autoupgrade Clicker Button to receive automated DMG.");
+            hintLabel.setText("You earned 50$. You can buy your first autouclicker.");
             hintLabel.setVisible(true); 
             hintAt50PointsShown = true; // Mark this hint as shown
         }
@@ -672,6 +655,11 @@ class GameLogic {
         bossCountdownTime = 30; // Reset des Countdowns
         bossCountdownLabel.setVisible(true);
         bossCountdownLabel.setText("Time left: " + bossCountdownTime + "s");
+       
+        hintLabel.setText("Boss Battle! Defeat him or you loose 30$ and you will repeat the current zone");
+        hintLabel.setVisible(true);
+        hintLabelTimer.restart(); 
+
 
         updateBossLevel();
 
@@ -683,6 +671,7 @@ class GameLogic {
                 if (bossCountdownTime <= 0) {
                     bossCountdownTimer.stop();
                     bossCountdownLabel.setVisible(false);
+
 
                   // Bestrafung, wenn der Boss nicht rechtzeitig besiegt wurde
                   points = Math.max(0, points -30); 
@@ -751,10 +740,15 @@ class GameLogic {
                         
                         if (bossLevelInt % 10 == 0){
                             nextProduction*=5;
+                            hintLabel.setText("Boss Defeated! You got: " + (nextProduction) + "$" );
+                            hintLabel.setVisible(true);
+                            hintLabelTimer.restart();
                         }
 
                         points = points + nextProduction;
                         updatePointsPerMonster();
+
+                       
 
 
                         if (defeatedMonsterInCurrentZone >= MONSTER_PER_ZONE){
