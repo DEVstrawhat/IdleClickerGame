@@ -121,12 +121,19 @@ public class IdleClickerGame {
         JLabel dmgPerSecond = new JLabel("Automated DMG: 0/s");
         dmgPerSecond.setForeground(Color.WHITE);
         dmgPerSecond.setFont(pixelifyFont);
+        
+        JLabel pointsPerMonster = new JLabel("Money/Monster: 1$");
+        pointsPerMonster.setForeground(Color.WHITE);
+        pointsPerMonster.setFont(pixelifyFont);
 
         topLeftPanel.add(zoneLabel);
         topLeftPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         topLeftPanel.add(bossLevel);
         topLeftPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         topLeftPanel.add(dmgPerSecond);
+        topLeftPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        topLeftPanel.add(pointsPerMonster);
+
 
         topWrapper.add(topLeftPanel);
 
@@ -234,7 +241,7 @@ public class IdleClickerGame {
         pointsLabel.setFont(pixelifyFont);
         pointsLabel.setForeground(Color.WHITE);
 
-        JLabel clickerLabel = new JLabel("Clicker Level: 1");
+        JLabel clickerLabel = new JLabel("Clicker Damage: 1");
         clickerLabel.setFont(pixelifyFont);
         clickerLabel.setForeground(Color.WHITE);
 
@@ -319,7 +326,7 @@ public class IdleClickerGame {
         frame.setVisible(true);
 
         GameLogic gameLogic = new GameLogic(pointsLabel, autoClickerLabel, clickerLabel, upgradeCostLabel,
-                upgradeAutoLabel, bossHealthLabel, bossLevel, gifLabel, monsterGifs, zoneLabel, dmgPerSecond, healthBar, maxHP, bossCountdownLabel, bossGifs, hintLabel);
+                upgradeAutoLabel, bossHealthLabel, bossLevel, gifLabel, monsterGifs, zoneLabel, dmgPerSecond, healthBar, maxHP, bossCountdownLabel, bossGifs, hintLabel, pointsPerMonster);
 
         clickerUpgradeButton.setToolTipText(gameLogic.getClickerUpgradeInfo());
 
@@ -389,7 +396,7 @@ public class IdleClickerGame {
 class GameLogic {
 
     // ints =======================================================================================================================
-    int points = 2;
+    int points = 50;
     int autoClickerLevel = 0;
     int autoClickerCost = 100;
     int clickerLevel = 1;
@@ -410,6 +417,7 @@ class GameLogic {
     int ownedAuto1 = 0;
     int maxHP;
     int nextCost = calculateNextCost();
+    
 
 
     // Labels, Timer and booleans ==================================================================================================
@@ -439,12 +447,13 @@ class GameLogic {
     private Timer hintLabelTimer;
     private boolean hintAt5PointsShown = false;
     private boolean hintAt50PointsShown = false;
+    private JLabel pointsPerMonster;
 
 
     //connecting the labels in game logic wiht the labels in class main ==================================================================
 
     public GameLogic(JLabel pointsLabel, JLabel autoClickerLabel, JLabel clickerLabel, JLabel upgradeCostLabel,
-            JLabel upgradeAutoLabel, JLabel bossHealthLabel, JLabel bossLevel, JLabel gifLabel, ArrayList<ImageIcon> monsterGifs, JLabel zoneLabel, JLabel dmgPerSecond, JProgressBar healthBar, int maxHP, JLabel bossCountdownLabel, ArrayList<ImageIcon> bossGifs, JLabel hintLabel) {
+            JLabel upgradeAutoLabel, JLabel bossHealthLabel, JLabel bossLevel, JLabel gifLabel, ArrayList<ImageIcon> monsterGifs, JLabel zoneLabel, JLabel dmgPerSecond, JProgressBar healthBar, int maxHP, JLabel bossCountdownLabel, ArrayList<ImageIcon> bossGifs, JLabel hintLabel, JLabel pointsPerMonster) {
         this.pointsLabel = pointsLabel;
         this.autoClickerLabel = autoClickerLabel;
         this.clickerLabel = clickerLabel;
@@ -461,6 +470,7 @@ class GameLogic {
         this.bossCountdownLabel = bossCountdownLabel;
         this.bossGifs = bossGifs;
         this.hintLabel = hintLabel;
+        this.pointsPerMonster = pointsPerMonster;
         healthBar.setMaximum(maxHP);
         healthBar.setValue(bossHealth);
 
@@ -471,7 +481,6 @@ class GameLogic {
             public void actionPerformed(ActionEvent e) {
                 
                 if (isMonsteralive) {
-                points += autoClickerLevel;
                 bossHealth = bossHealth - (5 * ownedAuto1);
                 updateBossHealth();
                 checkBossHealth();
@@ -535,6 +544,7 @@ class GameLogic {
     // ==============================================================================================
 
     void upgradeClicker() {
+        int nextCost = calculateNextCost();
         if (points >= nextCost) {
             points -= nextCost;
             clickerLevel++;
@@ -602,6 +612,10 @@ class GameLogic {
     }
 }
 
+    void updatePointsPerMonster(){
+        pointsPerMonster.setText("Money/Monster: " + calculateNextProduction() +"/$");
+
+    }
        
 
     void updateBossHealth(){
@@ -612,13 +626,13 @@ class GameLogic {
     void updatePointsLabel() {
         pointsLabel.setText( "Money: " + points + "$");
 
-        if  (points == 5 && !hintAt5PointsShown){
+        if  (points >= 5 && !hintAt5PointsShown){
             hintLabelTimer.start();
             hintLabel.setText("You earned 5$. Click the Upgrade Clicker Button to get stronger.");
             hintLabel.setVisible(true); 
             hintAt5PointsShown = true; // Mark this hint as shown
         }
-        if  (points == 50 && !hintAt50PointsShown){
+        if  (points >= 50 && !hintAt50PointsShown){
             hintLabelTimer.start();
             hintLabel.setText("You earned 50$. Click the Autoupgrade Clicker Button to receive automated DMG.");
             hintLabel.setVisible(true); 
@@ -627,10 +641,10 @@ class GameLogic {
     }
 
     void updateDmgPerSecond(){
-        dmgPerSecond.setText("Automated DMG: " + (5*ownedAuto1) +"/s");
+        dmgPerSecond.setText("Automated Damage: " + (5*ownedAuto1) +"/s");
     }
     void updateClickerLabel() {
-        clickerLabel.setText("Clicker level: " + clickerLevel);
+        clickerLabel.setText("Clicker Damage: " + clickerLevel);
     }
 
     void updateAutoClickerLabel() {
@@ -642,8 +656,7 @@ class GameLogic {
     }
 
     private void updateUpgradeCostLabel() {
-    int nextCost = calculateNextCost();
-        upgradeCostLabel.setText("Upgrade Cost: " + nextCost);
+        upgradeCostLabel.setText("Upgrade Cost: " + calculateNextCost());
     }
     public String getClickerUpgradeInfo() {
         return "Clicker Level: " + clickerLevel + " | Cost: " + calculateNextCost();
@@ -735,11 +748,13 @@ class GameLogic {
                         defeatedMonsterInCurrentZone++;
                         
                         int nextProduction = calculateNextProduction();
+                        
                         if (bossLevelInt % 10 == 0){
                             nextProduction*=5;
                         }
 
                         points = points + nextProduction;
+                        updatePointsPerMonster();
 
 
                         if (defeatedMonsterInCurrentZone >= MONSTER_PER_ZONE){
