@@ -672,6 +672,9 @@ class GameLogic {
                     bossCountdownTimer.stop();
                     bossCountdownLabel.setVisible(false);
 
+                    hintLabel.setText("You are defeated! You lost 30 points and continue battling in zone: " + currrentZone );
+                    hintLabel.setVisible(true);
+                    hintLabelTimer.restart();
 
                   // Bestrafung, wenn der Boss nicht rechtzeitig besiegt wurde
                   points = Math.max(0, points -30); 
