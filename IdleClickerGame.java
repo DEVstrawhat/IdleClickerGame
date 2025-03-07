@@ -477,7 +477,7 @@ class GameLogic {
             }
         });
 
-        hintLabelTimer = new Timer (3000, new ActionListener() {
+        hintLabelTimer = new Timer (3500, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 hintLabel.setVisible(false);
@@ -525,11 +525,7 @@ class GameLogic {
         EffectPlayer effectPlayer = new EffectPlayer();
         effectPlayer.playEffect("slash.wav");                       
     }
-    if  (points == 5 ){
-        hintLabelTimer.start();
-        hintLabel.setText("You have gained 5$. Click the Upgrade Clicker Button to get stronger.");
-        hintLabel.setVisible(true); 
-    }
+    
 }
 
 
@@ -613,6 +609,11 @@ class GameLogic {
 
     void updatePointsLabel() {
         pointsLabel.setText( "Money: " + points + "$");
+        if  (points == 5 ){
+            hintLabelTimer.start();
+            hintLabel.setText("You earned 5$. Click the Upgrade Clicker Button to get stronger.");
+            hintLabel.setVisible(true); 
+        }
     }
 
     void updateDmgPerSecond(){
