@@ -389,7 +389,7 @@ public class IdleClickerGame {
 class GameLogic {
 
     // ints =======================================================================================================================
-    int points = 0;
+    int points = 2;
     int autoClickerLevel = 0;
     int autoClickerCost = 100;
     int clickerLevel = 1;
@@ -437,6 +437,8 @@ class GameLogic {
     private boolean isMonsteralive = true;
     private JLabel hintLabel;
     private Timer hintLabelTimer;
+    private boolean hintAt5PointsShown = false;
+    private boolean hintAt50PointsShown = false;
 
 
     //connecting the labels in game logic wiht the labels in class main ==================================================================
@@ -609,10 +611,18 @@ class GameLogic {
 
     void updatePointsLabel() {
         pointsLabel.setText( "Money: " + points + "$");
-        if  (points == 5 ){
+
+        if  (points == 5 && !hintAt5PointsShown){
             hintLabelTimer.start();
             hintLabel.setText("You earned 5$. Click the Upgrade Clicker Button to get stronger.");
             hintLabel.setVisible(true); 
+            hintAt5PointsShown = true; // Mark this hint as shown
+        }
+        if  (points == 50 && !hintAt50PointsShown){
+            hintLabelTimer.start();
+            hintLabel.setText("You earned 50$. Click the Autoupgrade Clicker Button to receive automated DMG.");
+            hintLabel.setVisible(true); 
+            hintAt50PointsShown = true; // Mark this hint as shown
         }
     }
 
