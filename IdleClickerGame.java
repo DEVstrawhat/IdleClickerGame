@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javafx.scene.layout.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -84,15 +85,17 @@ public class IdleClickerGame {
         /*
          * 1. Main Panel 
          *  1.1 left Panel 
-         *      1.1.1 topleft Panel (including zone label, monster level label, automated dmg label)
+         *      1.1.1 north Panel (including zone label, monster level label, automated dmg label)
          *      1.1.2  center Panel (including monster- and boss png, health progressbar and health label )
-         *      1.1.3 topright Panel (including hint label)
          * 1.2 right Panel (including all upgarde labels)
          */
 
         JPanel mainPanel = new JPanel();
         mainPanel.setBackground(Color.BLACK);
         mainPanel.setLayout(new BorderLayout());
+
+        JPanel leftPanel = new JPanel();
+        leftPanel.setOpaque(false);
 
 
             // 1.1.1 North Panel ============================================================================================
@@ -101,6 +104,7 @@ public class IdleClickerGame {
         JPanel northPanel = new JPanel();
         northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.X_AXIS));
         northPanel.setBorder(BorderFactory.createEmptyBorder(10, 25, 0, 0));
+        
 
         northPanel.setOpaque(false);
 
@@ -120,11 +124,7 @@ public class IdleClickerGame {
         pointsPerMonster.setForeground(Color.WHITE);
         pointsPerMonster.setFont(pixelifyFont);
 
-        JLabel hintLabel = new JLabel(" This is a test message, to see if the hint panel is working properly!");
-        hintLabel.setFont(pixelifyFont);
-        hintLabel.setForeground(Color.RED);
-        hintLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        hintLabel.setVisible(false);
+    
 
         northPanel.add(zoneLabel);
         northPanel.add(Box.createRigidArea(new Dimension(50, 25)));
@@ -134,7 +134,10 @@ public class IdleClickerGame {
         northPanel.add(Box.createRigidArea(new Dimension(50,25)));
         northPanel.add(pointsPerMonster);
         northPanel.add(Box.createRigidArea(new Dimension(50,25)));
-        northPanel.add(hintLabel);
+
+        leftPanel.add(northPanel, BorderLayout.NORTH);
+
+        
 
 
 
@@ -143,7 +146,7 @@ public class IdleClickerGame {
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         centerPanel.setOpaque(false);
-        centerPanel.setBorder(BorderFactory.createEmptyBorder(225, 0, 0, 0));
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(200, 0, 0, 0));
         centerPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JProgressBar healthBar = new JProgressBar(0, 10);
@@ -201,7 +204,28 @@ public class IdleClickerGame {
         centerPanel.add(bossHealthPanel);
         centerPanel.add(bossCountdownLabel);
 
+        leftPanel.add(centerPanel, BorderLayout.CENTER);
+
        
+        // south Panel ==============================================================================================================================
+        JPanel southPanel = new JPanel();
+        southPanel.setLayout(new BoxLayout(southPanel, BoxLayout.Y_AXIS));
+        southPanel.setOpaque(false);
+        southPanel.setBorder(BorderFactory.createEmptyBorder(50, 0, 0, 0));
+        southPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel hintLabel = new JLabel(" This is a test message, to see if the hint panel is working properly!");
+        hintLabel.setFont(pixelifyFont);
+        hintLabel.setForeground(Color.RED);
+        hintLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        hintLabel.setVisible(false);
+
+        southPanel.add(hintLabel);
+
+        leftPanel.add(southPanel, BorderLayout.SOUTH);
+
+
+
         // 1.2 right Panel =======================================================================================================
 
         JPanel rightPanel = new BackgroundPanel("resources/ui/uipanelupgrades.png");
@@ -236,8 +260,8 @@ public class IdleClickerGame {
 
         JButton clickerUpgradeButton = new JButton("Upgrade your clicker strength");
         clickerUpgradeButton.setFont(pixelifyFont);
-        clickerUpgradeButton.setPreferredSize(new Dimension(500, 100));
-        clickerUpgradeButton.setMaximumSize(new Dimension(500,100));
+        clickerUpgradeButton.setPreferredSize(new Dimension(550, 100));
+        clickerUpgradeButton.setMaximumSize(new Dimension(550,100));
 
 
         //Warrior =====================================================================================================================
@@ -251,14 +275,14 @@ public class IdleClickerGame {
 
         JButton autoUpgradeButton = new JButton("Unlock Warrior");
         autoUpgradeButton.setFont(pixelifyFont);
-        autoUpgradeButton.setPreferredSize(new Dimension(500, 100));
-        autoUpgradeButton.setMaximumSize(new Dimension(500,100));
+        autoUpgradeButton.setPreferredSize(new Dimension(550, 100));
+        autoUpgradeButton.setMaximumSize(new Dimension(550,100));
 
         // Archer =========================================================================================================================
         JButton autoUpgradeArcher = new JButton("Unlock Archer");
         autoUpgradeArcher.setFont(pixelifyFont);
-        autoUpgradeArcher.setPreferredSize(new Dimension(500, 100));
-        autoUpgradeArcher.setMaximumSize(new Dimension(500,100));
+        autoUpgradeArcher.setPreferredSize(new Dimension(550, 100));
+        autoUpgradeArcher.setMaximumSize(new Dimension(550,100));
 
         JLabel autoClickerArcherLabel = new JLabel("Archer Level: 0");
         autoClickerArcherLabel.setFont(pixelifyFont);
@@ -272,8 +296,8 @@ public class IdleClickerGame {
         // Priest 
         JButton autoUpgradePriest = new JButton("Unlock Priest");
         autoUpgradePriest.setFont(pixelifyFont);
-        autoUpgradePriest.setPreferredSize(new Dimension(500, 100));
-        autoUpgradePriest.setMaximumSize(new Dimension(500,100));
+        autoUpgradePriest.setPreferredSize(new Dimension(550, 100));
+        autoUpgradePriest.setMaximumSize(new Dimension(550,100));
 
         JLabel autoClickerPriestLabel = new JLabel("Archer Level: 0");
         autoClickerPriestLabel.setFont(pixelifyFont);
@@ -289,16 +313,16 @@ public class IdleClickerGame {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.getVerticalScrollBar().setUnitIncrement(16); // Smoother scrolling
-        scrollPane.setPreferredSize(new Dimension(700, frame.getHeight())); // Set width, and use frame height
+        scrollPane.setPreferredSize(new Dimension(750, frame.getHeight())); // Set width, and use frame height
         scrollPane.setBorder(BorderFactory.createEmptyBorder()); // Remove border
         scrollPane.setOpaque(false);
         scrollPane.getViewport().setOpaque(false);
 
-        JLabel difference = new JLabel("=============================================");
+        JLabel difference = new JLabel("=================================================");
         difference.setFont(pixelifyFont);
         difference.setForeground(Color.WHITE);
 
-        JLabel difference2 = new JLabel("=============================================");
+        JLabel difference2 = new JLabel("=================================================");
         difference2.setFont(pixelifyFont);
         difference2.setForeground(Color.WHITE);
 
@@ -379,8 +403,7 @@ public class IdleClickerGame {
         effectLabel.setVisible(false);
 
         mainPanel.add(effectLabel);
-        mainPanel.add(northPanel, BorderLayout.NORTH);
-        mainPanel.add(centerPanel, BorderLayout.CENTER);
+        mainPanel.add(leftPanel, BorderLayout.CENTER);
         mainPanel.add(scrollPane, BorderLayout.EAST);
 
         frame.add(mainPanel);
