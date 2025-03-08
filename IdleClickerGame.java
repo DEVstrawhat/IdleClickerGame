@@ -206,9 +206,8 @@ public class IdleClickerGame {
 
         JPanel rightPanel = new BackgroundPanel("resources/ui/uipanelupgrades.png");
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
-        rightPanel.setBorder(BorderFactory.createEmptyBorder(50, 0, 0, 100));
+        rightPanel.setBorder(BorderFactory.createEmptyBorder(50, 0, 0, 50));
         rightPanel.setForeground(Color.WHITE);
-        rightPanel.setPreferredSize(new Dimension(700, 300));
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -237,10 +236,11 @@ public class IdleClickerGame {
 
         JButton clickerUpgradeButton = new JButton("Upgrade your clicker strength");
         clickerUpgradeButton.setFont(pixelifyFont);
-        clickerUpgradeButton.setPreferredSize(new Dimension(550, 100));
-        clickerUpgradeButton.setMaximumSize(new Dimension(550,100));
+        clickerUpgradeButton.setPreferredSize(new Dimension(500, 100));
+        clickerUpgradeButton.setMaximumSize(new Dimension(500,100));
 
 
+        //Warrior =====================================================================================================================
         JLabel autoClickerLabel = new JLabel("Autoclicker Level: 0");
         autoClickerLabel.setFont(pixelifyFont);
         autoClickerLabel.setForeground(Color.WHITE);
@@ -249,14 +249,66 @@ public class IdleClickerGame {
         upgradeAutoLabel.setFont(pixelifyFont);
         upgradeAutoLabel.setForeground(Color.WHITE);
 
-        JButton autoUpgradeButton = new JButton("Upgrade Hero 1");
+        JButton autoUpgradeButton = new JButton("Unlock Warrior");
         autoUpgradeButton.setFont(pixelifyFont);
-        autoUpgradeButton.setPreferredSize(new Dimension(550, 100));
-        autoUpgradeButton.setMaximumSize(new Dimension(550,100));
+        autoUpgradeButton.setPreferredSize(new Dimension(500, 100));
+        autoUpgradeButton.setMaximumSize(new Dimension(500,100));
 
+        // Archer =========================================================================================================================
+        JButton autoUpgradeArcher = new JButton("Unlock Archer");
+        autoUpgradeArcher.setFont(pixelifyFont);
+        autoUpgradeArcher.setPreferredSize(new Dimension(500, 100));
+        autoUpgradeArcher.setMaximumSize(new Dimension(500,100));
+
+        JLabel autoClickerArcherLabel = new JLabel("Archer Level: 0");
+        autoClickerArcherLabel.setFont(pixelifyFont);
+        autoClickerArcherLabel.setForeground(Color.WHITE);
+
+        JLabel upgradeAutoArcherLabel = new JLabel("Upgrade Archer Cost: 100");
+        upgradeAutoArcherLabel.setFont(pixelifyFont);
+        upgradeAutoArcherLabel.setForeground(Color.WHITE);
+
+
+        // Priest 
+        JButton autoUpgradePriest = new JButton("Unlock Priest");
+        autoUpgradePriest.setFont(pixelifyFont);
+        autoUpgradePriest.setPreferredSize(new Dimension(500, 100));
+        autoUpgradePriest.setMaximumSize(new Dimension(500,100));
+
+        JLabel autoClickerPriestLabel = new JLabel("Archer Level: 0");
+        autoClickerPriestLabel.setFont(pixelifyFont);
+        autoClickerArcherLabel.setForeground(Color.WHITE);
+
+        JLabel upgradeAutoPriestLabel = new JLabel("Upgrade Archer Cost: 100");
+        upgradeAutoPriestLabel.setFont(pixelifyFont);
+        upgradeAutoPriestLabel.setForeground(Color.WHITE);
+
+        // Rest =================================================================================================================================================
+      
         JScrollPane scrollPane = new JScrollPane(rightPanel);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16); // Smoother scrolling
+        scrollPane.setPreferredSize(new Dimension(700, frame.getHeight())); // Set width, and use frame height
+        scrollPane.setBorder(BorderFactory.createEmptyBorder()); // Remove border
         scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
+
+        JLabel difference = new JLabel("=============================================");
+        difference.setFont(pixelifyFont);
+        difference.setForeground(Color.WHITE);
+
+        JLabel difference2 = new JLabel("=============================================");
+        difference2.setFont(pixelifyFont);
+        difference2.setForeground(Color.WHITE);
+
+        JLabel getStrongerLabel = new JLabel("Clicker Upgrade");
+        getStrongerLabel.setFont(pixelifyFont);
+        getStrongerLabel.setForeground(Color.WHITE);
+
+        JLabel getAutoStrongerLabel = new JLabel("Auto Clicker Upgrades");
+        getAutoStrongerLabel.setFont(pixelifyFont);
+        getAutoStrongerLabel.setForeground(Color.WHITE);
         
         ImageIcon settings = new ImageIcon("resources/ui/settings.png");
         settings.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH); // Passe die Größe an
@@ -286,19 +338,43 @@ public class IdleClickerGame {
         rightPanel.add(Box.createRigidArea(new Dimension(0, 25)));
         rightPanel.add(pointsLabel);
         rightPanel.add(Box.createRigidArea(new Dimension(0, 50)));
+        rightPanel.add(getStrongerLabel);
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 0)));
+        rightPanel.add(difference);
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 25)));
         rightPanel.add(clickerUpgradeButton);
         rightPanel.add(Box.createRigidArea(new Dimension(0, 0)));
         rightPanel.add(clickerLabel);
         rightPanel.add(Box.createRigidArea(new Dimension(0, 0)));
         rightPanel.add(upgradeCostLabel);
         rightPanel.add(Box.createRigidArea(new Dimension(0, 50)));
+        rightPanel.add(getAutoStrongerLabel);
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 0)));
+        rightPanel.add(difference2);
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 25)));
         rightPanel.add(autoUpgradeButton);
         rightPanel.add(Box.createRigidArea(new Dimension(0, 0)));
         rightPanel.add(autoClickerLabel);
         rightPanel.add(Box.createRigidArea(new Dimension(0, 0)));
         rightPanel.add(upgradeAutoLabel);
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 50)));
+        rightPanel.add(autoUpgradeArcher);
         rightPanel.add(Box.createRigidArea(new Dimension(0, 0)));
+        rightPanel.add(autoClickerArcherLabel);
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 0)));
+        rightPanel.add(upgradeAutoArcherLabel);
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 50)));
+        rightPanel.add(autoUpgradePriest);
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 0)));
+        rightPanel.add(autoClickerPriestLabel);
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 0)));
+        rightPanel.add(upgradeAutoPriestLabel);
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 75)));
 
+
+
+
+    // gluing everything together =============================================================================================================
         JLabel effectLabel = new JLabel(new ImageIcon("resources/effects/clickeffect.gif"));
         effectLabel.setVisible(false);
 
@@ -519,8 +595,8 @@ class GameLogic {
         bossHealth = bossHealth - clickerLevel;
         checkBossHealth();
         updateBossHealth();        
-        EffectPlayer effectPlayer = new EffectPlayer();
-        effectPlayer.playEffect("slash.wav");                       
+        //EffectPlayer effectPlayer = new EffectPlayer();
+        //effectPlayer.playEffect("slash.wav");                       
     }
     
 }
