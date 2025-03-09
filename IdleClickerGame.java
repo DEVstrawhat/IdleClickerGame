@@ -10,9 +10,12 @@ import java.util.Random;
 
 public class IdleClickerGame {
 
-    private static ArrayList<ImageIcon> monsterGifs = new ArrayList<>();
-    private static ArrayList<ImageIcon> bossGifs = new ArrayList<>();
-    private static int currentGifIndex = 0;
+
+    // implementing the different pngs ================================================================================================
+
+    private static ArrayList<ImageIcon> monsterPngs = new ArrayList<>();
+    private static ArrayList<ImageIcon> bossPngs = new ArrayList<>();
+    private static int currentPngIndex = 0;
     private static Random random = new Random();
 
     private static ImageIcon resizeGif(String path, int width, int height) {
@@ -31,12 +34,12 @@ public class IdleClickerGame {
         if (files != null && files.length > 0) {
             for (File file : files) {
                 ImageIcon resizedIcon = resizeGif(file.getAbsolutePath(), gifWidth, gifHeight);
-                monsterGifs.add(resizedIcon);
+                monsterPngs.add(resizedIcon);
             }
         }
     }
 
-    private static void loadBossGifs() {
+    private static void loadBossPngs() {
         int gifWidth = 700;
         int gifHeight = 500;
     
@@ -46,15 +49,17 @@ public class IdleClickerGame {
         if (files != null && files.length > 0) {
             for (File file : files) {
                 ImageIcon resizedIcon = resizeGif(file.getAbsolutePath(), gifWidth, gifHeight);
-                bossGifs.add(resizedIcon);
+                bossPngs.add(resizedIcon);
             }
         }
     }
 
-   
 
+   
     public static void main(String[] args) throws FontFormatException, IOException {
-        JFrame frame = new JFrame("Idle MonsterHunter");
+        
+        // frame =================================================================================================================
+        JFrame frame = new JFrame("Idle 8-bit Hunter");
         frame.setSize(1920, 1080);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -64,7 +69,8 @@ public class IdleClickerGame {
         Font pixelifyFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources/font/BitPotionExt.ttf")).deriveFont(35f);
 
 
-        // BAckground for UI UpgradePanel
+        // BAckground for UI UpgradePanel======================================================================================
+    
         class BackgroundPanel extends JPanel {
         private Image backgroundImage;
 
@@ -87,6 +93,7 @@ public class IdleClickerGame {
          *  1.1 left Panel 
          *      1.1.1 north Panel (including zone label, monster level label, automated dmg label)
          *      1.1.2  center Panel (including monster- and boss png, health progressbar and health label )
+         *      1.1.3 south Panel (including th hint label)
          * 1.2 right Panel (including all upgarde labels)
          */
 
@@ -98,14 +105,11 @@ public class IdleClickerGame {
         leftPanel.setOpaque(false);
 
 
-            // 1.1.1 North Panel ============================================================================================
-
+        // 1.1.1 North Panel ============================================================================================
 
         JPanel northPanel = new JPanel();
         northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.X_AXIS));
         northPanel.setBorder(BorderFactory.createEmptyBorder(10, 25, 0, 0));
-        
-
         northPanel.setOpaque(false);
 
         JLabel bossLevel = new JLabel("Monster Level: 1");
@@ -124,8 +128,6 @@ public class IdleClickerGame {
         pointsPerMonster.setForeground(Color.WHITE);
         pointsPerMonster.setFont(pixelifyFont);
 
-    
-
         northPanel.add(zoneLabel);
         northPanel.add(Box.createRigidArea(new Dimension(50, 25)));
         northPanel.add(bossLevel);
@@ -136,9 +138,6 @@ public class IdleClickerGame {
         northPanel.add(Box.createRigidArea(new Dimension(50,25)));
 
         leftPanel.add(northPanel, BorderLayout.NORTH);
-
-        
-
 
 
         // 1.1.2. center Panel =======================================================================================================
@@ -165,9 +164,9 @@ public class IdleClickerGame {
         healthBarPanel.add(Box.createHorizontalGlue());
 
         loadMonsterGifs();
-        loadBossGifs();
-        currentGifIndex = random.nextInt(monsterGifs.size());
-        ImageIcon gifIcon = monsterGifs.get(currentGifIndex);
+        loadBossPngs();
+        currentPngIndex = random.nextInt(monsterPngs.size());
+        ImageIcon gifIcon = monsterPngs.get(currentPngIndex);
         JLabel gifLabel = new JLabel(gifIcon);
 
         JPanel gifLabelPanel = new JPanel();
@@ -177,9 +176,6 @@ public class IdleClickerGame {
         gifLabelPanel.setMaximumSize(new Dimension(700, 500));
         gifLabelPanel.add(gifLabel);
         gifLabelPanel.add(Box.createHorizontalGlue());
-
-        
-        
 
         JLabel bossHealthLabel = new JLabel("Health: 10");
         bossHealthLabel.setForeground(Color.WHITE);
@@ -207,7 +203,8 @@ public class IdleClickerGame {
         leftPanel.add(centerPanel, BorderLayout.CENTER);
 
        
-        // south Panel ==============================================================================================================================
+        // 1.1.3 south Panel ==============================================================================================================================
+        
         JPanel southPanel = new JPanel();
         southPanel.setLayout(new BoxLayout(southPanel, BoxLayout.Y_AXIS));
         southPanel.setOpaque(false);
@@ -225,20 +222,17 @@ public class IdleClickerGame {
         leftPanel.add(southPanel, BorderLayout.SOUTH);
 
 
-
         // 1.2 right Panel =======================================================================================================
 
         JPanel rightPanel = new BackgroundPanel("resources/ui/uipanelupgrades.png");
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
-        rightPanel.setBorder(BorderFactory.createEmptyBorder(50, 0, 0, 50));
+        rightPanel.setBorder(BorderFactory.createEmptyBorder(50, 10, 0, 50));
         rightPanel.setForeground(Color.WHITE);
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        
         buttonPanel.setPreferredSize(new Dimension(1075, 75));
         buttonPanel.setMaximumSize(new Dimension(1075,75));
-
         buttonPanel.setOpaque(false);
 
         JLabel pointsLabel = new JLabel("Money: 0$");
@@ -263,8 +257,9 @@ public class IdleClickerGame {
         clickerUpgradeButton.setPreferredSize(new Dimension(550, 100));
         clickerUpgradeButton.setMaximumSize(new Dimension(550,100));
 
-
-        //Warrior =====================================================================================================================
+        // AutoClicker Upgrade Buttons ===============================================================================================
+        //1. Warrior =====================================================================================================================
+        
         JLabel autoClickerLabel = new JLabel("Autoclicker Level: 0");
         autoClickerLabel.setFont(pixelifyFont);
         autoClickerLabel.setForeground(Color.WHITE);
@@ -278,7 +273,9 @@ public class IdleClickerGame {
         autoUpgradeButton.setPreferredSize(new Dimension(550, 100));
         autoUpgradeButton.setMaximumSize(new Dimension(550,100));
 
-        // Archer =========================================================================================================================
+
+        // 2. Archer =========================================================================================================================
+        
         JButton autoUpgradeArcher = new JButton("Unlock Archer");
         autoUpgradeArcher.setFont(pixelifyFont);
         autoUpgradeArcher.setPreferredSize(new Dimension(550, 100));
@@ -293,21 +290,22 @@ public class IdleClickerGame {
         upgradeAutoArcherLabel.setForeground(Color.WHITE);
 
 
-        // Priest 
+        // 3. Priest ========================================================================================================================
+        
         JButton autoUpgradePriest = new JButton("Unlock Priest");
         autoUpgradePriest.setFont(pixelifyFont);
         autoUpgradePriest.setPreferredSize(new Dimension(550, 100));
         autoUpgradePriest.setMaximumSize(new Dimension(550,100));
 
-        JLabel autoClickerPriestLabel = new JLabel("Archer Level: 0");
+        JLabel autoClickerPriestLabel = new JLabel("Priest Level: 0");
         autoClickerPriestLabel.setFont(pixelifyFont);
         autoClickerArcherLabel.setForeground(Color.WHITE);
 
-        JLabel upgradeAutoPriestLabel = new JLabel("Upgrade Archer Cost: 100");
+        JLabel upgradeAutoPriestLabel = new JLabel("Upgrade Priest Cost: 100");
         upgradeAutoPriestLabel.setFont(pixelifyFont);
         upgradeAutoPriestLabel.setForeground(Color.WHITE);
 
-        // Rest =================================================================================================================================================
+        // Rest  of the rightPanel =================================================================================================================================================
       
         JScrollPane scrollPane = new JScrollPane(rightPanel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -318,7 +316,7 @@ public class IdleClickerGame {
         scrollPane.setOpaque(false);
         scrollPane.getViewport().setOpaque(false);
 
-        JLabel difference = new JLabel("=================================================");
+        JLabel difference = new JLabel("==================================================");
         difference.setFont(pixelifyFont);
         difference.setForeground(Color.WHITE);
 
@@ -396,9 +394,8 @@ public class IdleClickerGame {
         rightPanel.add(Box.createRigidArea(new Dimension(0, 75)));
 
 
-
-
     // gluing everything together =============================================================================================================
+        
         JLabel effectLabel = new JLabel(new ImageIcon("resources/effects/clickeffect.gif"));
         effectLabel.setVisible(false);
 
@@ -410,7 +407,7 @@ public class IdleClickerGame {
         frame.setVisible(true);
 
         GameLogic gameLogic = new GameLogic(pointsLabel, autoClickerLabel, clickerLabel, upgradeCostLabel,
-                upgradeAutoLabel, bossHealthLabel, bossLevel, gifLabel, monsterGifs, zoneLabel, dmgPerSecond, healthBar, maxHP, bossCountdownLabel, bossGifs, hintLabel, pointsPerMonster);
+                upgradeAutoLabel, bossHealthLabel, bossLevel, gifLabel, monsterPngs, zoneLabel, dmgPerSecond, healthBar, maxHP, bossCountdownLabel, bossPngs, hintLabel, pointsPerMonster);
 
         clickerUpgradeButton.setToolTipText(gameLogic.getClickerUpgradeInfo());
 
@@ -437,9 +434,7 @@ public class IdleClickerGame {
         });
 
 
-
-
-
+        //
         Timer timer = new Timer(300, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
@@ -447,10 +442,10 @@ public class IdleClickerGame {
             }
         });
 
-
         timer.setRepeats(false);
 
         mainPanel.setLayout(null);
+        
         gifLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mousePressed(java.awt.event.MouseEvent e) {
@@ -474,432 +469,5 @@ public class IdleClickerGame {
 
 
 
-
-// Game Logic ========================================================================================================================
-
-class GameLogic {
-
-    // ints =======================================================================================================================
-    int points = 0;
-    int autoClickerLevel = 0;
-    int autoClickerCost = 100;
-    int clickerLevel = 1;
-    int bossHealth = 10;
-    int bossLevelInt = 1;
-    int currentGifIndex = 0;
-    double costbase = 5;
-    double rategrowth = 1.07;
-    int owned = 0;
-    int multipliers = 1;
-    double productionBase = 1;
-    double rateMonster = 1.55;
-    int currrentZone = 1;
-    int defeatedMonsterInCurrentZone = 0;
-    final int MONSTER_PER_ZONE = 10;
-    double costbaseAuto1 = 50;
-    double rategrowthAuto1 = 1.22;
-    int ownedAuto1 = 0;
-    int maxHP;
-    int nextCost = calculateNextCost();
-    int nextProduction = calculateNextProduction();
-    
-
-
-    // Labels, Timer and booleans ==================================================================================================
-
-    private JLabel pointsLabel;
-    private JLabel autoClickerLabel;
-    private JLabel clickerLabel;
-    private JLabel upgradeCostLabel;
-    private JLabel upgradeAutoLabel;
-    private JLabel bossHealthLabel;
-    private JLabel bossLevel;
-    private JLabel gifLabel;
-    private JLabel zoneLabel;
-    private JLabel dmgPerSecond;
-    private static Random random = new Random();
-    private JProgressBar healthBar;
-    private boolean isBossLevel = false;
-    private Timer bossCountdownTimer;
-    private int bossCountdownTime = 30;
-    private JLabel bossCountdownLabel;
-    ArrayList<ImageIcon> monsterGifs;
-    private Timer autoClickTimer;
-    private boolean isAutoClickerRunning = false;
-    ArrayList<ImageIcon> bossGifs;
-    private boolean isMonsteralive = true;
-    private JLabel hintLabel;
-    private Timer hintLabelTimer;
-    private boolean hintAt5PointsShown = false;
-    private boolean hintAt50PointsShown = false;
-    private JLabel pointsPerMonster;
-
-
-    //connecting the labels in game logic wiht the labels in class main ==================================================================
-
-    public GameLogic(JLabel pointsLabel, JLabel autoClickerLabel, JLabel clickerLabel, JLabel upgradeCostLabel,
-            JLabel upgradeAutoLabel, JLabel bossHealthLabel, JLabel bossLevel, JLabel gifLabel, ArrayList<ImageIcon> monsterGifs, JLabel zoneLabel, JLabel dmgPerSecond, JProgressBar healthBar, int maxHP, JLabel bossCountdownLabel, ArrayList<ImageIcon> bossGifs, JLabel hintLabel, JLabel pointsPerMonster) {
-        this.pointsLabel = pointsLabel;
-        this.autoClickerLabel = autoClickerLabel;
-        this.clickerLabel = clickerLabel;
-        this.upgradeCostLabel = upgradeCostLabel;
-        this.upgradeAutoLabel = upgradeAutoLabel;
-        this.bossHealthLabel = bossHealthLabel;
-        this.bossLevel = bossLevel;
-        this.gifLabel = gifLabel;
-        this.monsterGifs = monsterGifs;
-        this.zoneLabel = zoneLabel;
-        this.dmgPerSecond = dmgPerSecond;
-        this.healthBar = healthBar;
-        this.maxHP = maxHP;
-        this.bossCountdownLabel = bossCountdownLabel;
-        this.bossGifs = bossGifs;
-        this.hintLabel = hintLabel;
-        this.pointsPerMonster = pointsPerMonster;
-        healthBar.setMaximum(maxHP);
-        healthBar.setValue(bossHealth);
-
-        updateUpgradeCostLabel();
-        updateUpgradeAutoLabel();
-
-        autoClickTimer = new Timer(1000, new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                
-                if (isMonsteralive) {
-                bossHealth = bossHealth - (5 * ownedAuto1);
-                updateBossHealth();
-                checkBossHealth();
-                }
-            }
-        });
-
-        hintLabelTimer = new Timer (3500, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                hintLabel.setVisible(false);
-                hintLabelTimer.stop();
-            }
-        });
-        hintLabelTimer.setRepeats(false);
-
-    }
-        
-     
-
-
-    // Calculation formulas ======================================================================================================
-    // How much Gold shoulod drop after a monster is dead
-    int calculateNextProduction(){
-        return (int) ((productionBase * currrentZone *multipliers)); //I will add multipliers later in the game 
-    }
-    // How much does the next upgrade costs
-    int calculateNextCost(){
-        return (int) (((costbase + owned) *Math.pow(rategrowth, owned)));
-    }
-//test
-    // How much life has the next monster 
-    int calculateNextMonster(){
-        if (bossLevelInt % 10 == 0){
-            return (int) (100* (currrentZone -1 + Math.pow(rateMonster, currrentZone-1)));
-        }else 
-         return (int) (10*(currrentZone- 1 + Math.pow(rateMonster, currrentZone-1)));
-    }
-
-    // How much cost for autoclicker 
-    int calculateNextAutoCost1(){
-        return (int) (costbaseAuto1 *Math.pow(rategrowthAuto1, ownedAuto1));
-    }
-
-    // Function Nr.1:Figth
-    // ===================================================================================================
-
-    void incrementPoints() {
-        if (isMonsteralive && bossHealth > 0) { 
-        bossHealth = bossHealth - clickerLevel;
-        checkBossHealth();
-        updateBossHealth();        
-        //EffectPlayer effectPlayer = new EffectPlayer();
-        //effectPlayer.playEffect("slash.wav");                       
-    }
-    
-}
-
-
-    // Function Nr.2: Upgrade Clicker Button
-    // ==============================================================================================
-
-    void upgradeClicker() {
-        int nextCost = calculateNextCost();
-        if (points >= nextCost) {
-            points -= nextCost;
-            clickerLevel++;
-            owned++;
-            updatePointsLabel();
-            updateClickerLabel();
-            updateUpgradeCostLabel();
-            
-        } else {
-            hintLabelTimer.start();
-            hintLabel.setText("You dont have enough money to buy the next clicker upgrade.");
-            hintLabel.setVisible(true);
-            }  
-    }
-
-    // Function Nr.3: Autoclicker
-    // ==========================================================================================================
-
-    void incrementAuto() {
-        int nextAutoCost = calculateNextAutoCost1();
-        
-        if (points >= nextAutoCost) {
-            points -= nextAutoCost;
-            
-            autoClickerLevel++;
-            ownedAuto1++;
-            updatePointsLabel();
-            updateAutoClickerLabel();
-            updateUpgradeAutoLabel();
-            updateDmgPerSecond();
-
-
-            if (!isAutoClickerRunning) {
-                startAutoclicker();
-                isAutoClickerRunning = true;
-            }
-        } else {
-            hintLabelTimer.start();
-            hintLabel.setText("You dont have enough money to buy the next auto upgrade.");
-            hintLabel.setVisible(true);
-            }  
-
-    
-    }
-
-    void startAutoclicker() {
-        autoClickTimer.start();
-    }
-
-    // Function 4: Settings ====================================================================================================
-
-     void openSettingsLabel(){
-             
-     }
-
-
-
-    // Methods to update the Labels
-    // =========================================================================================================
-    void updateBossLevel(){
-        if (isBossLevel){
-            bossLevel.setText("Boss Monster Level: " + currrentZone);
-        }else {
-        bossLevel.setText("Monster Level: " + bossLevelInt);
-    }
-}
-
-    void updatePointsPerMonster(){
-        pointsPerMonster.setText("Money/Monster: " + calculateNextProduction() +"$");
-
-    }
-       
-
-    void updateBossHealth(){
-        bossHealthLabel.setText("Health: " + bossHealth);
-        healthBar.setValue(bossHealth);
-    }
-
-    void updatePointsLabel() {
-        pointsLabel.setText( "Money: " + points + "$");
-
-        if  (points >= 5 && !hintAt5PointsShown){
-            hintLabelTimer.start();
-            hintLabel.setText("You earned 5$. You can buy your first clickerupgrade.");
-            hintLabel.setVisible(true); 
-            hintAt5PointsShown = true; // Mark this hint as shown
-        }
-        if  (points >= 50 && !hintAt50PointsShown){
-            hintLabelTimer.start();
-            hintLabel.setText("You earned 50$. You can buy your first autouclicker.");
-            hintLabel.setVisible(true); 
-            hintAt50PointsShown = true; // Mark this hint as shown
-        }
-    }
-
-    void updateDmgPerSecond(){
-        dmgPerSecond.setText("Automated Damage: " + (5*ownedAuto1) +"/s");
-    }
-    void updateClickerLabel() {
-        clickerLabel.setText("Clicker Damage: " + clickerLevel);
-    }
-
-    void updateAutoClickerLabel() {
-        autoClickerLabel.setText("Auto Clicker level: " + autoClickerLevel);
-    }
-
-    void updateZoneLabel(){
-        zoneLabel.setText("Zone: " + currrentZone);
-    }
-
-    private void updateUpgradeCostLabel() {
-        upgradeCostLabel.setText("Upgrade Cost: " + calculateNextCost());
-    }
-    public String getClickerUpgradeInfo() {
-        return "Clicker Level: " + clickerLevel + " | Cost: " + calculateNextCost();
-    }
-    
-    private void updateUpgradeAutoLabel() {
-        int nextAutoCost = calculateNextAutoCost1();
-        upgradeAutoLabel.setText("Upgrade Cost: " + nextAutoCost);
-    }
-
-    private void startBossLevel() {
-        isBossLevel = true;
-        bossCountdownTime = 30; // Reset des Countdowns
-        bossCountdownLabel.setVisible(true);
-        bossCountdownLabel.setText("Time left: " + bossCountdownTime + "s");
-       
-        hintLabel.setText("Boss Battle! Defeat him or you loose 30$ and you will repeat the current zone");
-        hintLabel.setVisible(true);
-        hintLabelTimer.restart(); 
-
-
-        updateBossLevel();
-
-        bossCountdownTimer = new Timer(1000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-
-                if (bossCountdownTime <= 0) {
-                    bossCountdownTimer.stop();
-                    bossCountdownLabel.setVisible(false);
-
-                    hintLabel.setText("You are defeated! You lost 30 points and continue battling in zone: " + currrentZone );
-                    hintLabel.setVisible(true);
-                    hintLabelTimer.restart();
-
-                  // Bestrafung, wenn der Boss nicht rechtzeitig besiegt wurde
-                  points = Math.max(0, points -30); 
-                  updatePointsLabel();
-
-                  isBossLevel = false;
-                  
-                  bossLevelInt =1;
-                  updateBossLevel();
-
-                currentGifIndex = random.nextInt(monsterGifs.size());
-                gifLabel.setIcon(monsterGifs.get(currentGifIndex));
-                  
-                  int nextMonster = calculateNextMonster();
-                  maxHP = nextMonster;
-                  bossHealth = nextMonster;
-                  healthBar.setMaximum(maxHP);
-                  healthBar.setValue(bossHealth);
-                  updateBossHealth();
-
-                  defeatedMonsterInCurrentZone = 0;
-                  
-              
-            
-                } else {
-                bossCountdownTime--;
-                bossCountdownLabel.setText("Time left: " + bossCountdownTime + "s");
-                
-                }                                
-            }
-        });
-
-        bossCountdownTimer.start();
-
-        if (bossGifs != null && bossGifs.size() > 0) {
-            int randomBossIndex = random.nextInt(bossGifs.size());
-            gifLabel.setIcon(bossGifs.get(randomBossIndex));
-        } else {
-        // Hier kannst du ein spezielles Boss-Bild laden
-        ImageIcon bossIcon = new ImageIcon("resources/boss/boss_image.png");
-        gifLabel.setIcon(bossIcon);
-        }
-    }
-    
-    private void checkBossHealth(){
-
-        if (bossHealth <= 0) {
-            bossHealth = 0;
-            updateBossHealth();
-            isMonsteralive = false;
-
-                
-            if (isBossLevel) {
-                bossCountdownTimer.stop();
-                bossCountdownLabel.setVisible(false);
-                isBossLevel = false;
-            }
-
-        
-                Timer deathTimer = new Timer(400, new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        defeatedMonsterInCurrentZone++;
-                        
-                        int nextProduction = calculateNextProduction();
-                        
-                        if (bossLevelInt % 10 == 0){
-                            nextProduction*=5;
-                            hintLabel.setText("Boss Defeated! You got: " + (nextProduction) + "$" );
-                            hintLabel.setVisible(true);
-                            hintLabelTimer.restart();
-                        }
-
-                        points = points + nextProduction;
-                        updatePointsPerMonster();
-
-                       
-
-
-                        if (defeatedMonsterInCurrentZone >= MONSTER_PER_ZONE){
-                            currrentZone++;
-                            defeatedMonsterInCurrentZone =0;
-                            bossLevelInt =1;
-
-                        }else if (bossLevelInt % 10==0){
-                            bossLevelInt =1;
-                        }else {
-                            bossLevelInt++;
-                        }
-
-                        boolean nextIsBoss = (bossLevelInt == 10 && defeatedMonsterInCurrentZone == MONSTER_PER_ZONE - 1);
-
-                        int nextMonster = calculateNextMonster();
-                        
-                        maxHP = nextMonster;
-                        bossHealth = bossHealth + nextMonster;
-                        healthBar.setMaximum(maxHP);
-                        healthBar.setValue(Math.max(0, bossHealth));
-                        
-                        updateBossHealth();
-                        updateBossLevel();
-                        updatePointsLabel();
-                        updateZoneLabel();
-                        
-                        if (nextIsBoss) {
-                            // Starte Boss-Level, wenn es das 10. Monster ist und alle Monster in der Zone besiegt wurden
-                            startBossLevel();
-                        } else {
-                        
-                        currentGifIndex = random.nextInt(monsterGifs.size());
-                        gifLabel.setIcon(monsterGifs.get(currentGifIndex));
-                        }
-                        isMonsteralive = true;
-                    }
-                });
-                deathTimer.setRepeats(false); // Timer soll nur einmal ausgeführt werden
-                deathTimer.start();
-            }
-          
-
-            
-        }
-        
-    }
 
 
