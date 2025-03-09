@@ -165,6 +165,10 @@ public class GameLogic {
         return (int) ((productionBase * currrentZone *multipliers)); //I will add multipliers later in the game 
     }
 
+    int calculateBossProduction() {
+        return (int) ((productionBase * currrentZone * multipliers) * 5); // 5x Multiplikator für den Boss
+    }
+
     // How much does the next upgrade costs
     int calculateNextCost(){
         return (int) (((costbase + owned) *Math.pow(rategrowth, owned)));
@@ -313,9 +317,15 @@ public class GameLogic {
 
 
 
-    void updatePointsPerMonster(){
-        pointsPerMonster.setText("Money/Monster: " + calculateNextProduction() +"$");
+    void updatePointsPerMonster() {
+    if (isBossLevel) {
+        int bossProduction = calculateBossProduction();
+        pointsPerMonster.setText("Money/Boss: " + bossProduction + "$");
+    } else {
+        int monsterProduction = calculateNextProduction();
+        pointsPerMonster.setText("Money/Monster: " + monsterProduction + "$");
     }
+}
        
 
     void updateBossHealth(){
@@ -525,14 +535,19 @@ public class GameLogic {
                     public void actionPerformed(ActionEvent e) {
                         defeatedMonsterInCurrentZone++;
                         
-                        int nextProduction = calculateNextProduction();
+                        int nextProduction;
                         
                         if (bossLevelInt % 10 == 0){
-                            nextProduction*=5;
-                            hintLabel.setText("Boss Defeated! You got: " + (nextProduction) + "$" );
-                            hintLabel.setVisible(true);
-                            hintLabelTimer.restart();
+                            nextProduction = calculateBossProduction();
+                            hintLabel.setText("Boss Defeated! You got: " + nextProduction + "$");
+                        }else{
+                            nextProduction = calculateNextProduction();
+                            hintLabel.setText("Monster Defeated! You got: " + nextProduction + "$" );
+                          
                         }
+
+                        hintLabel.setVisible(true);
+                        hintLabelTimer.restart();
 
                         points = points + nextProduction;
                         updatePointsPerMonster();

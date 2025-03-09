@@ -1,3 +1,4 @@
+
 import javax.swing.*;
 import javafx.scene.layout.Border;
 import java.awt.*;
@@ -259,15 +260,14 @@ public class IdleClickerGame {
         JLabel pointsLabel = new JLabel("Money: 0$");
         pointsLabel.setFont(pixelifyFont);
         pointsLabel.setForeground(Color.WHITE);
+        pointsLabel.setFont(pointsLabel.getFont().deriveFont(Font.BOLD));
+
 
         JLabel clickerLabel = new JLabel("Clicker Damage: 1");
         clickerLabel.setFont(pixelifyFont);
         clickerLabel.setForeground(Color.WHITE);
 
-        JLabel upgradeOptionsLabel = new JLabel("Upgrade your skills!");
-        upgradeOptionsLabel.setFont(pixelifyFont);
-        upgradeOptionsLabel.setForeground(Color.WHITE);
-        upgradeOptionsLabel.setFont(upgradeOptionsLabel.getFont().deriveFont(Font.BOLD));
+        
 
         JLabel upgradeCostLabel = new JLabel("Upgrade Cost: 10");
         upgradeCostLabel.setFont(pixelifyFont);
@@ -390,7 +390,6 @@ public class IdleClickerGame {
         buttonPanel.add(settingsButton);
 
         rightPanel.add(buttonPanel);
-        rightPanel.add(upgradeOptionsLabel);
         rightPanel.add(Box.createRigidArea(new Dimension(0, 25)));
         rightPanel.add(pointsLabel);
         rightPanel.add(Box.createRigidArea(new Dimension(0, 50)));

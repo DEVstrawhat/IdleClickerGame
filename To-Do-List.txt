@@ -22,17 +22,11 @@ Haalth bar if its above 70
 To-Do-List for the 09.03:
 
 2. Functionality 
-    - make the Archer and Priest Button work 
     - Add a x10, x100 and xMAx Button fur upgrades
-    - Boss has different elements,and 
     (After Zone 10 drop an item, which has some improvement)
 
 
-3. Logic 
-    - make the code more structured 
-    - renaming some objects for better undertsandable code 
 
 
 4. Bugs
 -Health bar if its above 70
-- Boss defeated hint is next to the gif Label 
