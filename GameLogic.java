@@ -11,6 +11,7 @@ import java.util.Random;
 // Game Logic ========================================================================================================================
 
 public class GameLogic {
+    
 
     // ints =======================================================================================================================
     int points = 1000;
@@ -76,13 +77,22 @@ public class GameLogic {
     private boolean hintAt5PointsShown = false;
     private boolean hintAt50PointsShown = false;
     private JLabel pointsPerMonster;
-
+    private JButton autoUpgradeWarrior;
+    private JButton autoUpgradeArcher;
+    private JButton autoUpgradePriest;
+    public enum BossType {
+        PHYSICAL,
+        MAGICAL,
+        AGILE
+    }
+    private BossType currentBossType;
+    
 
     //connecting the labels in game logic wiht the labels in class main ==================================================================
 
     public GameLogic(JLabel pointsLabel, JLabel autoClickerWarriorLabel, JLabel autoClickerArcherLabel, JLabel autoClickerPriestLabel, JLabel clickerLabel, JLabel upgradeCostLabel,
             JLabel upgradeAutoWarriorLabel, JLabel upgradeAutoArcherLabel, JLabel upgradeAutoPriestLabel,JLabel bossHealthLabel, JLabel bossLevel, JLabel gifLabel, ArrayList<ImageIcon> monsterPngs, JLabel zoneLabel, 
-            JLabel dmgPerSecond, JProgressBar healthBar, int maxHP, JLabel bossCountdownLabel, ArrayList<ImageIcon> bossPngs, JLabel hintLabel, JLabel pointsPerMonster) {
+            JLabel dmgPerSecond, JProgressBar healthBar, int maxHP, JLabel bossCountdownLabel, ArrayList<ImageIcon> bossPngs, JLabel hintLabel, JLabel pointsPerMonster, JButton autoUpgradeWarrior, JButton autoUpgradeArcher, JButton autoUpgradePriest ) {
         
                 this.pointsLabel = pointsLabel;
         this.autoClickerWarriorLabel = autoClickerWarriorLabel;
@@ -105,6 +115,9 @@ public class GameLogic {
         this.bossPngs = bossPngs;
         this.hintLabel = hintLabel;
         this.pointsPerMonster = pointsPerMonster;
+        this.autoUpgradeWarrior = autoUpgradeWarrior;
+        this.autoUpgradeArcher = autoUpgradeArcher;
+        this.autoUpgradePriest = autoUpgradePriest;
         healthBar.setMaximum(maxHP);
         healthBar.setValue(bossHealth);
 
@@ -112,6 +125,9 @@ public class GameLogic {
         updateUpgradeAutoLabel("Warrior");
         updateUpgradeAutoLabel("Archer");
         updateUpgradeAutoLabel("Priest");
+        
+        BossType[] bossTypes = BossType.values();
+    currentBossType = bossTypes[random.nextInt(bossTypes.length)];
 
         // Timer =================================================================================================================
 
@@ -119,7 +135,9 @@ public class GameLogic {
             public void actionPerformed(ActionEvent e) {
                 
                 if (isMonsteralive) {
-                bossHealth = bossHealth -calculateAutoDamage();
+                int totalDamage = calculateAutoDamage();
+                System.out.println("AutoClicker Damage: " + totalDamage); 
+                bossHealth = bossHealth - totalDamage;
                 updateBossHealth();
                 checkBossHealth();
                 }
@@ -254,6 +272,15 @@ public class GameLogic {
             hintLabel.setVisible(true);
         }
     
+        if (ownedPriest >= 1) {
+        updatePriestButton();
+        }
+        if (ownedArcher >= 1) {
+            updateArcherButton();
+            }
+        if (ownedWarrior >= 1) {
+            updateWarriorButton();
+            }
         }
         
     
@@ -278,11 +305,13 @@ public class GameLogic {
     // =========================================================================================================
     void updateBossLevel(){
         if (isBossLevel){
-            bossLevel.setText("Boss Monster Level: " + currrentZone);
+            bossLevel.setText("Boss Monster Level: " + currrentZone + " Type: "+ currentBossType);
         }else {
         bossLevel.setText("Monster Level: " + bossLevelInt);
     }
 }
+
+
 
     void updatePointsPerMonster(){
         pointsPerMonster.setText("Money/Monster: " + calculateNextProduction() +"$");
@@ -319,9 +348,43 @@ public class GameLogic {
         clickerLabel.setText("Clicker Damage: " + clickerLevel);
     }
 
-    int calculateAutoDamage() {
-        return (5 * ownedWarrior) + (5 * ownedArcher) + (5 * ownedPriest); // Beispielwerte für Schaden
+    void updateWarriorButton(){
+        autoUpgradeWarrior.setText("Upgrade Warrior");
+        
     }
+    void updateArcherButton(){
+        autoUpgradeArcher.setText("Upgrade Archer");
+        
+    }
+    void updatePriestButton(){
+        autoUpgradePriest.setText("Upgrade Priest");
+        
+    }
+
+    int calculateAutoDamage() {
+            int warriorDamage = 5 * ownedWarrior;
+            int archerDamage = 5 * ownedArcher;
+            int priestDamage = 5 * ownedPriest;
+        
+            if (isBossLevel){
+            switch (currentBossType) {
+                case PHYSICAL:
+                    warriorDamage *= 2;
+                    archerDamage /= 2;
+                    break;
+                case MAGICAL:
+                    priestDamage *= 2;
+                    warriorDamage /= 2;
+                    break;
+                case AGILE:
+                    archerDamage *= 2;
+                    priestDamage /= 2;
+                    break;
+            }
+        }
+        
+            return warriorDamage + archerDamage + priestDamage;
+            }
     void updateAutoClickerLabel(String autoClickerType) {
         switch (autoClickerType) {
             case "Warrior":
@@ -373,7 +436,12 @@ public class GameLogic {
         bossCountdownLabel.setVisible(true);
         bossCountdownLabel.setText("Time left: " + bossCountdownTime + "s");
        
-        hintLabel.setText("Boss Battle! Defeat him or you loose 30$ and you will repeat the current zone");
+        BossType[] bossTypes = BossType.values();
+        currentBossType = bossTypes[random.nextInt(bossTypes.length)];
+
+
+
+        hintLabel.setText("Boss Battle! Boss Type: " +currentBossType +  "Defeat him or you loose 30$ and you will repeat the current zone");
         hintLabel.setVisible(true);
         hintLabelTimer.restart(); 
 

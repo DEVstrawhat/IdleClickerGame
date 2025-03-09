@@ -67,10 +67,16 @@ public class IdleClickerGame {
         //musicPlayer.playMusic("dungeonBeat.wav");
 
         Font pixelifyFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources/font/BitPotionExt.ttf")).deriveFont(35f);
-
-
+        Image cursorImage = new ImageIcon("resources/ui/mouseclicker.png").getImage();
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        Point hotSpot = new Point(0, 0); // Der "heiße Punkt" des Cursors (z. B. die Spitze eines Pfeils)
+        Cursor customCursor = toolkit.createCustomCursor(cursorImage, hotSpot, "CustomCursor");
         // BAckground for UI UpgradePanel======================================================================================
     
+        ImageIcon warriorSymbol = new ImageIcon("resources/ui/WarriorClass.png");
+        ImageIcon archerSymbol = new ImageIcon("resources/ui/ArcherClass.png");
+        ImageIcon priestSymbol = new ImageIcon("resources/ui/PriestClass.png");
+
         class BackgroundPanel extends JPanel {
         private Image backgroundImage;
 
@@ -268,18 +274,27 @@ public class IdleClickerGame {
         upgradeAutoWarriorLabel.setFont(pixelifyFont);
         upgradeAutoWarriorLabel.setForeground(Color.WHITE);
 
-        JButton autoUpgradeWarrior = new JButton("Unlock Warrior");
+        JButton autoUpgradeWarrior = new JButton("Unlock Warrior", warriorSymbol);
         autoUpgradeWarrior.setFont(pixelifyFont);
+        autoUpgradeWarrior.setBackground(Color.WHITE);
         autoUpgradeWarrior.setPreferredSize(new Dimension(550, 100));
         autoUpgradeWarrior.setMaximumSize(new Dimension(550,100));
+        autoUpgradeWarrior.setHorizontalTextPosition(SwingConstants.LEFT); // Text rechts vom Icon
+        autoUpgradeWarrior.setIconTextGap(100); // Abstand in Pixeln
+        autoUpgradeWarrior.setHorizontalAlignment(SwingConstants.RIGHT); // Icon und Text linksbündig
+        
 
 
         // 2. Archer =========================================================================================================================
         
-        JButton autoUpgradeArcher = new JButton("Unlock Archer");
+        JButton autoUpgradeArcher = new JButton("Unlock Archer", archerSymbol);
         autoUpgradeArcher.setFont(pixelifyFont);
+        autoUpgradeArcher.setBackground(Color.WHITE);
         autoUpgradeArcher.setPreferredSize(new Dimension(550, 100));
         autoUpgradeArcher.setMaximumSize(new Dimension(550,100));
+        autoUpgradeArcher.setHorizontalTextPosition(SwingConstants.LEFT); // Text rechts vom Icon
+        autoUpgradeArcher.setIconTextGap(100); // Abstand in Pixeln
+        autoUpgradeArcher.setHorizontalAlignment(SwingConstants.RIGHT); // Icon und Text linksbündig
 
         JLabel autoClickerArcherLabel = new JLabel("Archer Level: 0");
         autoClickerArcherLabel.setFont(pixelifyFont);
@@ -292,14 +307,18 @@ public class IdleClickerGame {
 
         // 3. Priest ========================================================================================================================
         
-        JButton autoUpgradePriest = new JButton("Unlock Priest");
+        JButton autoUpgradePriest = new JButton("Unlock Priest", priestSymbol);
         autoUpgradePriest.setFont(pixelifyFont);
+        autoUpgradePriest.setBackground(Color.WHITE);
         autoUpgradePriest.setPreferredSize(new Dimension(550, 100));
         autoUpgradePriest.setMaximumSize(new Dimension(550,100));
+        autoUpgradePriest.setHorizontalTextPosition(SwingConstants.LEFT); // Text rechts vom Icon
+        autoUpgradePriest.setIconTextGap(100); // Abstand in Pixeln
+        autoUpgradePriest.setHorizontalAlignment(SwingConstants.RIGHT); // Icon und Text linksbündig
 
         JLabel autoClickerPriestLabel = new JLabel("Priest Level: 0");
         autoClickerPriestLabel.setFont(pixelifyFont);
-        autoClickerArcherLabel.setForeground(Color.WHITE);
+        autoClickerPriestLabel.setForeground(Color.WHITE);
 
         JLabel upgradeAutoPriestLabel = new JLabel("Upgrade Priest Cost: 50");
         upgradeAutoPriestLabel.setFont(pixelifyFont);
@@ -402,11 +421,11 @@ public class IdleClickerGame {
         mainPanel.add(effectLabel);
         mainPanel.add(leftPanel, BorderLayout.CENTER);
         mainPanel.add(scrollPane, BorderLayout.EAST);
-
         frame.add(mainPanel);
+        frame.setCursor(customCursor);
         frame.setVisible(true);
 
-        GameLogic gameLogic = new GameLogic(pointsLabel, autoClickerWarriorLabel,autoClickerArcherLabel,autoClickerPriestLabel, clickerLabel, upgradeCostLabel, upgradeAutoWarriorLabel, upgradeAutoArcherLabel, upgradeAutoPriestLabel,bossHealthLabel, bossLevel, gifLabel, monsterPngs, zoneLabel, dmgPerSecond, healthBar, maxHP, bossCountdownLabel, bossPngs, hintLabel, pointsPerMonster);
+        GameLogic gameLogic = new GameLogic(pointsLabel, autoClickerWarriorLabel,autoClickerArcherLabel,autoClickerPriestLabel, clickerLabel, upgradeCostLabel, upgradeAutoWarriorLabel, upgradeAutoArcherLabel, upgradeAutoPriestLabel,bossHealthLabel, bossLevel, gifLabel, monsterPngs, zoneLabel, dmgPerSecond, healthBar, maxHP, bossCountdownLabel, bossPngs, hintLabel, pointsPerMonster, autoUpgradeWarrior, autoUpgradeArcher, autoUpgradePriest );
 
 
         clickerUpgradeButton.setToolTipText(gameLogic.getClickerUpgradeInfo());
@@ -445,6 +464,8 @@ public class IdleClickerGame {
             }
         });
 
+       
+
 
         //
         Timer timer = new Timer(300, new ActionListener() {
@@ -478,6 +499,8 @@ public class IdleClickerGame {
         });
     }
 }
+
+
 
 
 
