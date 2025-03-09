@@ -63,8 +63,8 @@ public class IdleClickerGame {
         frame.setSize(1920, 1080);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        //MusicPlayer musicPlayer = new MusicPlayer();
-        //musicPlayer.playMusic("dungeonBeat.wav");
+        MusicPlayer musicPlayer = new MusicPlayer();
+        musicPlayer.playMusic("Boss Battle.wav");
 
         Font pixelifyFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources/font/BitPotionExt.ttf")).deriveFont(35f);
         Image cursorImage = new ImageIcon("resources/ui/mouseclicker.png").getImage();
@@ -199,12 +199,20 @@ public class IdleClickerGame {
         bossCountdownLabel.setFont(pixelifyFont);
         bossCountdownLabel.setVisible(false);
 
+        JPanel bossCountdowPanel = new JPanel();
+        bossCountdowPanel.setLayout(new BoxLayout(bossCountdowPanel, BoxLayout.X_AXIS));
+        bossCountdowPanel.setOpaque(false);
+        bossCountdowPanel.add(Box.createHorizontalGlue());
+        bossCountdowPanel.add(bossCountdownLabel);
+        bossCountdowPanel.add(Box.createHorizontalGlue());
+
+
         centerPanel.add(gifLabelPanel);
         centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         centerPanel.add(healthBarPanel);
         centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         centerPanel.add(bossHealthPanel);
-        centerPanel.add(bossCountdownLabel);
+        centerPanel.add(bossCountdowPanel);
 
         leftPanel.add(centerPanel, BorderLayout.CENTER);
 
@@ -212,18 +220,25 @@ public class IdleClickerGame {
         // 1.1.3 south Panel ==============================================================================================================================
         
         JPanel southPanel = new JPanel();
-        southPanel.setLayout(new BoxLayout(southPanel, BoxLayout.Y_AXIS));
+        southPanel.setLayout(new BorderLayout());
         southPanel.setOpaque(false);
         southPanel.setBorder(BorderFactory.createEmptyBorder(50, 0, 0, 0));
-        southPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        southPanel.setPreferredSize(new Dimension(frame.getWidth(), 100)); 
 
         JLabel hintLabel = new JLabel(" This is a test message, to see if the hint panel is working properly!");
         hintLabel.setFont(pixelifyFont);
         hintLabel.setForeground(Color.RED);
-        hintLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        hintLabel.setHorizontalAlignment(SwingConstants.CENTER);
         hintLabel.setVisible(false);
 
-        southPanel.add(hintLabel);
+        JPanel hintPanel = new JPanel();
+        hintPanel.setLayout(new BoxLayout(hintPanel, BoxLayout.X_AXIS));
+        hintPanel.setOpaque(false);
+        hintPanel.add(Box.createHorizontalGlue());
+        hintPanel.add(hintLabel);
+        hintPanel.add(Box.createHorizontalGlue());
+
+        southPanel.add(hintPanel, BorderLayout.CENTER);
 
         leftPanel.add(southPanel, BorderLayout.SOUTH);
 

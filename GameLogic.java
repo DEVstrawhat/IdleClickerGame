@@ -441,7 +441,7 @@ public class GameLogic {
 
 
 
-        hintLabel.setText("Boss Battle! Boss Type: " +currentBossType +  "Defeat him or you loose 30$ and you will repeat the current zone");
+        hintLabel.setText("Boss Battle! Boss Type: " +currentBossType +  " Defeat him or you loose 30$ and you will repeat the current zone");
         hintLabel.setVisible(true);
         hintLabelTimer.restart(); 
 
