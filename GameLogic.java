@@ -13,7 +13,7 @@ import java.util.Random;
 public class GameLogic {
 
     // ints =======================================================================================================================
-    int points = 0;
+    int points = 1000;
     int autoClickerLevel = 0;
     int autoClickerCost = 100;
     int clickerLevel = 1;
@@ -29,9 +29,15 @@ public class GameLogic {
     int currrentZone = 1;
     int defeatedMonsterInCurrentZone = 0;
     final int MONSTER_PER_ZONE = 10;
-    double costbaseAuto1 = 50;
-    double rategrowthAuto1 = 1.22;
-    int ownedAuto1 = 0;
+    double costbaseWarrior = 50;
+    double costbaseArcher = 50;
+    double costbasePriest = 50;
+    double rategrowthAutoWarrior = 1.22;
+    double rategrowthAutoArcher = 1.22;
+    double rategrowthAutoPriest = 1.22;
+    int ownedWarrior = 0;
+    int ownedArcher = 0;
+    int ownedPriest = 0;
     int maxHP;
     int nextCost = calculateNextCost();
     int nextProduction = calculateNextProduction();
@@ -41,10 +47,14 @@ public class GameLogic {
     // Labels, Timer and booleans ==================================================================================================
 
     private JLabel pointsLabel;
-    private JLabel autoClickerLabel;
+    private JLabel autoClickerWarriorLabel;
+    private JLabel autoClickerArcherLabel;
+    private JLabel autoClickerPriestLabel;
+    private JLabel upgradeAutoWarriorLabel;
+    private JLabel upgradeAutoArcherLabel;
+    private JLabel upgradeAutoPriestLabel;
     private JLabel clickerLabel;
     private JLabel upgradeCostLabel;
-    private JLabel upgradeAutoLabel;
     private JLabel bossHealthLabel;
     private JLabel bossLevel;
     private JLabel gifLabel;
@@ -70,15 +80,19 @@ public class GameLogic {
 
     //connecting the labels in game logic wiht the labels in class main ==================================================================
 
-    public GameLogic(JLabel pointsLabel, JLabel autoClickerLabel, JLabel clickerLabel, JLabel upgradeCostLabel,
-            JLabel upgradeAutoLabel, JLabel bossHealthLabel, JLabel bossLevel, JLabel gifLabel, ArrayList<ImageIcon> monsterPngs, JLabel zoneLabel, 
+    public GameLogic(JLabel pointsLabel, JLabel autoClickerWarriorLabel, JLabel autoClickerArcherLabel, JLabel autoClickerPriestLabel, JLabel clickerLabel, JLabel upgradeCostLabel,
+            JLabel upgradeAutoWarriorLabel, JLabel upgradeAutoArcherLabel, JLabel upgradeAutoPriestLabel,JLabel bossHealthLabel, JLabel bossLevel, JLabel gifLabel, ArrayList<ImageIcon> monsterPngs, JLabel zoneLabel, 
             JLabel dmgPerSecond, JProgressBar healthBar, int maxHP, JLabel bossCountdownLabel, ArrayList<ImageIcon> bossPngs, JLabel hintLabel, JLabel pointsPerMonster) {
         
                 this.pointsLabel = pointsLabel;
-        this.autoClickerLabel = autoClickerLabel;
+        this.autoClickerWarriorLabel = autoClickerWarriorLabel;
+        this.autoClickerArcherLabel = autoClickerArcherLabel;
+        this.autoClickerPriestLabel = autoClickerPriestLabel;
         this.clickerLabel = clickerLabel;
         this.upgradeCostLabel = upgradeCostLabel;
-        this.upgradeAutoLabel = upgradeAutoLabel;
+        this.upgradeAutoWarriorLabel = upgradeAutoWarriorLabel;
+        this.upgradeAutoArcherLabel = upgradeAutoArcherLabel;
+        this.upgradeAutoPriestLabel = upgradeAutoPriestLabel;
         this.bossHealthLabel = bossHealthLabel;
         this.bossLevel = bossLevel;
         this.gifLabel = gifLabel;
@@ -95,8 +109,9 @@ public class GameLogic {
         healthBar.setValue(bossHealth);
 
         updateUpgradeCostLabel();
-        updateUpgradeAutoLabel();
-
+        updateUpgradeAutoLabel("Warrior");
+        updateUpgradeAutoLabel("Archer");
+        updateUpgradeAutoLabel("Priest");
 
         // Timer =================================================================================================================
 
@@ -104,7 +119,7 @@ public class GameLogic {
             public void actionPerformed(ActionEvent e) {
                 
                 if (isMonsteralive) {
-                bossHealth = bossHealth - (5 * ownedAuto1);
+                bossHealth = bossHealth -calculateAutoDamage();
                 updateBossHealth();
                 checkBossHealth();
                 }
@@ -146,8 +161,16 @@ public class GameLogic {
     }
 
     // How much cost for autoclicker 
-    int calculateNextAutoCost1(){
-        return (int) (costbaseAuto1 *Math.pow(rategrowthAuto1, ownedAuto1));
+    int calculateNextAutoCostWarrior(){
+        return (int) (costbaseWarrior *Math.pow(rategrowthAutoWarrior, ownedWarrior));
+    }
+
+    int calculateNextAutoCostArcher(){
+        return (int) (costbaseArcher *Math.pow(rategrowthAutoArcher, ownedArcher));
+    }
+
+    int calculateNextAutoCostPriest(){
+        return (int) (costbasePriest *Math.pow(rategrowthAutoPriest, ownedPriest));
     }
 
 
@@ -183,20 +206,41 @@ public class GameLogic {
             }  
     }
 
-    // Function Nr.3: Autoclicker
+    // Function Nr.3: Autoclicker Warrior
     // ==========================================================================================================
 
-    void incrementAuto() {
-        int nextAutoCost = calculateNextAutoCost1();
-        
+    void incrementAutoClicker(String autoClickerType) {
+        int nextAutoCost = 0;
+        switch (autoClickerType) {
+            case "Warrior":
+            nextAutoCost = calculateNextAutoCostWarrior();
+                break;
+            case "Archer":
+            nextAutoCost = calculateNextAutoCostArcher();
+                break;
+            case "Priest":
+            nextAutoCost = calculateNextAutoCostPriest();
+                break;
+        }
         if (points >= nextAutoCost) {
             points -= nextAutoCost;
             
-            autoClickerLevel++;
-            ownedAuto1++;
+            switch (autoClickerType) {
+                case "Warrior":
+                ownedWarrior++;
+                break;
+            case "Archer":
+                ownedArcher++;
+                break;
+            case "Priest":
+                ownedPriest++;
+                break;
+        }
+
+
             updatePointsLabel();
-            updateAutoClickerLabel();
-            updateUpgradeAutoLabel();
+            updateAutoClickerLabel(autoClickerType);
+            updateUpgradeAutoLabel(autoClickerType);
             updateDmgPerSecond();
 
 
@@ -208,13 +252,19 @@ public class GameLogic {
             hintLabelTimer.start();
             hintLabel.setText("You dont have enough money to buy the next auto upgrade.");
             hintLabel.setVisible(true);
-            }  
-    }
+        }
+    
+        }
+        
+    
+    
 
     void startAutoclicker() {
         autoClickTimer.start();
     }
 
+
+    
 
     // Function 4: Settings ====================================================================================================
 
@@ -262,15 +312,29 @@ public class GameLogic {
     }
 
     void updateDmgPerSecond(){
-        dmgPerSecond.setText("Automated Damage: " + (5*ownedAuto1) +"/s");
+        int totalDamage = calculateAutoDamage();
+        dmgPerSecond.setText("Automated Damage: " + totalDamage +"/s");
     }
     void updateClickerLabel() {
         clickerLabel.setText("Clicker Damage: " + clickerLevel);
     }
 
-    void updateAutoClickerLabel() {
-        autoClickerLabel.setText("Auto Clicker level: " + autoClickerLevel);
+    int calculateAutoDamage() {
+        return (5 * ownedWarrior) + (5 * ownedArcher) + (5 * ownedPriest); // Beispielwerte für Schaden
     }
+    void updateAutoClickerLabel(String autoClickerType) {
+        switch (autoClickerType) {
+            case "Warrior":
+            autoClickerWarriorLabel.setText("Warrior Level: " + ownedWarrior);
+            break;
+        case "Archer":
+            autoClickerArcherLabel.setText("Archer Level: " + ownedArcher);
+            break;
+        case "Priest":
+            autoClickerPriestLabel.setText("Priest Level: " + ownedPriest);
+            break;
+    }
+}
 
     void updateZoneLabel(){
         zoneLabel.setText("Zone: " + currrentZone);
@@ -284,12 +348,23 @@ public class GameLogic {
         return "Clicker Level: " + clickerLevel + " | Cost: " + calculateNextCost();
     }
     
-    private void updateUpgradeAutoLabel() {
-        int nextAutoCost = calculateNextAutoCost1();
-        upgradeAutoLabel.setText("Upgrade Cost: " + nextAutoCost);
+    private void updateUpgradeAutoLabel(String autoClickerType) {
+        int nextAutoCost = 0;
+    switch (autoClickerType) {
+        case "Warrior":
+            nextAutoCost = calculateNextAutoCostWarrior();
+            upgradeAutoWarriorLabel.setText("Upgrade Warrior Cost: " + nextAutoCost);
+            break;
+        case "Archer":
+            nextAutoCost = calculateNextAutoCostArcher();
+            upgradeAutoArcherLabel.setText("Upgrade Archer Cost: " + nextAutoCost);
+            break;
+        case "Priest":
+            nextAutoCost = calculateNextAutoCostPriest();
+            upgradeAutoPriestLabel.setText("Upgrade Priest Cost: " + nextAutoCost);
+            break;
     }
-
-
+}
     //start Boss Level method ========================================================================================================
 
     private void startBossLevel() {
@@ -440,6 +515,7 @@ public class GameLogic {
 
             
         }
+
         
     }
 
