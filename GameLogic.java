@@ -321,10 +321,9 @@ public class GameLogic {
     if (isBossLevel) {
         int bossProduction = calculateBossProduction();
         pointsPerMonster.setText("Money/Boss: " + bossProduction + "$");
-    } else {
-        int monsterProduction = calculateNextProduction();
-        pointsPerMonster.setText("Money/Monster: " + monsterProduction + "$");
-    }
+    } 
+        
+    
 }
        
 
@@ -535,21 +534,19 @@ public class GameLogic {
                     public void actionPerformed(ActionEvent e) {
                         defeatedMonsterInCurrentZone++;
                         
-                        int nextProduction;
+                        int nextProduction= calculateNextMonster();
                         
                         if (bossLevelInt % 10 == 0){
                             nextProduction = calculateBossProduction();
                             hintLabel.setText("Boss Defeated! You got: " + nextProduction + "$");
-                        }else{
-                            nextProduction = calculateNextProduction();
-                            hintLabel.setText("Monster Defeated! You got: " + nextProduction + "$" );
-                          
+                            hintLabel.setVisible(true);
+                            hintLabelTimer.restart();                 
                         }
 
-                        hintLabel.setVisible(true);
-                        hintLabelTimer.restart();
+                       
 
                         points = points + nextProduction;
+                        updatePointsLabel();
                         updatePointsPerMonster();
 
                        

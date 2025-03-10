@@ -67,7 +67,7 @@ public class IdleClickerGame {
         MusicPlayer musicPlayer = new MusicPlayer();
         musicPlayer.playMusic("Boss Battle.wav");
 
-        Font pixelifyFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources/font/BitPotionExt.ttf")).deriveFont(35f);
+        Font pixelifyFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources/font/BitPotionExt.ttf")).deriveFont(38f);
         Image cursorImage = new ImageIcon("resources/ui/mouseclicker.png").getImage();
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Point hotSpot = new Point(0, 0); // Der "heiße Punkt" des Cursors (z. B. die Spitze eines Pfeils)
@@ -77,6 +77,7 @@ public class IdleClickerGame {
         ImageIcon warriorSymbol = new ImageIcon("resources/ui/WarriorClass.png");
         ImageIcon archerSymbol = new ImageIcon("resources/ui/ArcherClass.png");
         ImageIcon priestSymbol = new ImageIcon("resources/ui/PriestClass.png");
+        ImageIcon mouseUpgrade = new ImageIcon("resources/ui/MouseUpgrade.png");
 
         class BackgroundPanel extends JPanel {
         private Image backgroundImage;
@@ -207,7 +208,9 @@ public class IdleClickerGame {
         bossCountdowPanel.add(bossCountdownLabel);
         bossCountdowPanel.add(Box.createHorizontalGlue());
 
-
+      
+        
+      
         centerPanel.add(gifLabelPanel);
         centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         centerPanel.add(healthBarPanel);
@@ -248,7 +251,7 @@ public class IdleClickerGame {
 
         JPanel rightPanel = new BackgroundPanel("resources/ui/uipanelupgrades.png");
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
-        rightPanel.setBorder(BorderFactory.createEmptyBorder(50, 10, 0, 50));
+        rightPanel.setBorder(BorderFactory.createEmptyBorder(60, 10, 0, 50));
         rightPanel.setForeground(Color.WHITE);
 
         JPanel buttonPanel = new JPanel();
@@ -273,10 +276,14 @@ public class IdleClickerGame {
         upgradeCostLabel.setFont(pixelifyFont);
         upgradeCostLabel.setForeground(Color.WHITE);
 
-        JButton clickerUpgradeButton = new JButton("Upgrade your clicker strength");
+        JButton clickerUpgradeButton = new JButton("Upgrade your clicker strength", mouseUpgrade);
         clickerUpgradeButton.setFont(pixelifyFont);
         clickerUpgradeButton.setPreferredSize(new Dimension(550, 100));
         clickerUpgradeButton.setMaximumSize(new Dimension(550,100));
+        clickerUpgradeButton.setHorizontalTextPosition(SwingConstants.LEFT); // Text rechts vom Icon
+        clickerUpgradeButton.setIconTextGap(50); // Abstand in Pixeln
+        clickerUpgradeButton.setHorizontalAlignment(SwingConstants.RIGHT); // Icon und Text linksbündig
+        clickerUpgradeButton.setBackground(Color.WHITE);
 
         // AutoClicker Upgrade Buttons ===============================================================================================
         //1. Warrior =====================================================================================================================
@@ -375,16 +382,19 @@ public class IdleClickerGame {
         settingsButton.setMaximumSize(new Dimension(60, 60));
         settingsButton.setFont(pixelifyFont);
         settingsButton.setForeground(Color.BLACK);
+        settingsButton.setBorder(BorderFactory.createEmptyBorder());
 
         ImageIcon achievement = new ImageIcon("resources/ui/achievements.png");
-        achievement.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH); // Passe die Größe an
+        achievement.getImage().getScaledInstance(55, 55, Image.SCALE_SMOOTH); // Passe die Größe an
 
         JButton achievementButton = new JButton(achievement);
-        achievementButton.setPreferredSize(new Dimension(60, 60)); // Gleiche Größe wie das Bild
-        achievementButton.setMinimumSize(new Dimension(60, 60));
-        achievementButton.setMaximumSize(new Dimension(60, 60));
+        achievementButton.setPreferredSize(new Dimension(55, 55)); // Gleiche Größe wie das Bild
+        achievementButton.setMinimumSize(new Dimension(55, 55));
+        achievementButton.setMaximumSize(new Dimension(55, 55));
         achievementButton.setFont(pixelifyFont);
         achievementButton.setForeground(Color.BLACK);
+        achievementButton.setBorder(BorderFactory.createEmptyBorder());
+
 
         buttonPanel.add(achievementButton);
         buttonPanel.add(settingsButton);
