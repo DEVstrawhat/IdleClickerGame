@@ -14,7 +14,7 @@ public class GameLogic {
     
 
     // ints =======================================================================================================================
-    int points = 1000;
+    int points = 0;
     int autoClickerLevel = 0;
     int autoClickerCost = 100;
     int clickerLevel = 1;
@@ -546,6 +546,7 @@ public class GameLogic {
                        
 
                         points = points + nextProduction;
+             
                         updatePointsLabel();
                         updatePointsPerMonster();
 
