@@ -18,6 +18,7 @@ public class IdleClickerGame {
     private static ArrayList<ImageIcon> bossPngs = new ArrayList<>();
     private static int currentPngIndex = 0;
     private static Random random = new Random();
+    public static MusicPlayer musicPlayer; 
 
     private static ImageIcon resizeGif(String path, int width, int height) {
         ImageIcon icon = new ImageIcon(path);

@@ -299,9 +299,52 @@ public class GameLogic {
 
     // Function 4: Settings ====================================================================================================
 
-     void openSettingsLabel(){
-             // still working on it 
-     }
+    void openSettingsLabel(){
+        // Dialog box for settings
+        JDialog settingsDialog = new JDialog((Frame)null, "Settings", true);
+        settingsDialog.setSize(400, 300);
+        settingsDialog.setLocationRelativeTo(null);
+        settingsDialog.setLayout(new BorderLayout());
+        
+        // Panel for settings
+        JPanel settingsPanel = new JPanel(new GridLayout(3, 2, 10, 10));
+        settingsPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        
+        // Checkbox for volume
+        settingsPanel.add(new JLabel("Enable Sound:"));
+        JCheckBox soundCheckBox = new JCheckBox();
+        soundCheckBox.setSelected(true);
+        settingsPanel.add(soundCheckBox);
+        
+        // Volume slider
+        settingsPanel.add(new JLabel("Volume:"));
+        JSlider volumeSlider = new JSlider(0, 100, 50);
+        volumeSlider.setMajorTickSpacing(25);
+        volumeSlider.setPaintTicks(true);
+        volumeSlider.setPaintLabels(true);
+        volumeSlider.addChangeListener(e -> {
+            int volumeValue = volumeSlider.getValue();
+            IdleClickerGame.musicPlayer.setVolume(volumeValue);
+        });
+        // Add the slider to the panel so it becomes visible
+        settingsPanel.add(volumeSlider);
+        
+        settingsDialog.add(settingsPanel, BorderLayout.CENTER);
+        
+        // Panel for the Close button
+        JPanel buttonPanel = new JPanel();
+        JButton closeButton = new JButton("Close");
+        closeButton.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                settingsDialog.dispose();
+            }
+        });
+        buttonPanel.add(closeButton);
+        settingsDialog.add(buttonPanel, BorderLayout.SOUTH);
+        
+        // Show the settings dialog
+        settingsDialog.setVisible(true);
+    }
 
 
 
