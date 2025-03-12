@@ -65,8 +65,8 @@ public class IdleClickerGame {
         frame.setSize(1920, 1080);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        MusicPlayer musicPlayer = new MusicPlayer();
-        musicPlayer.playMusic("Boss Battle.wav");
+        IdleClickerGame.musicPlayer = new MusicPlayer();
+        IdleClickerGame.musicPlayer.playMusic("Boss Battle.wav");
 
         Font pixelifyFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources/font/BitPotionExt.ttf")).deriveFont(38f);
         Image cursorImage = new ImageIcon("resources/ui/mouseclicker.png").getImage();
