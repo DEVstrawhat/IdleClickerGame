@@ -176,8 +176,8 @@ public class GameLogic {
 
     // How much life has the next monster 
     int calculateNextMonster(){
-        if (bossLevelInt % 10 == 0){
-            return (int) (100* (currrentZone -1 + Math.pow(rateMonster, currrentZone-1)));
+                if (bossLevelInt % 10 == 0){
+            return (int) (100*(currrentZone -1 + Math.pow(rateMonster, currrentZone-1)));
         }else 
          return (int) (10*(currrentZone- 1 + Math.pow(rateMonster, currrentZone-1)));
     }
@@ -577,7 +577,7 @@ public class GameLogic {
                     public void actionPerformed(ActionEvent e) {
                         defeatedMonsterInCurrentZone++;
                         
-                        int nextProduction= calculateNextMonster();
+                        int nextProduction= calculateNextProduction();
                         
                         if (bossLevelInt % 10 == 0){
                             nextProduction = calculateBossProduction();
