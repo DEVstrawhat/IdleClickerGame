@@ -153,9 +153,24 @@ public class GameLogic {
         });
         hintLabelTimer.setRepeats(false);
 
+
+        // start hint label
+        hintLabel.setText("Click on the monster to deal damage and earn money!");
+        hintLabel.setVisible(true);
+    
+        Timer startHintTimer = new Timer(5000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                hintLabel.setVisible(false);
+            }
+        });
+        startHintTimer.setRepeats(false); // Timer should only run once 
+        startHintTimer.start();
+
+
     }
         
-     
+   
 
 
     // Calculation formulas ======================================================================================================
@@ -346,8 +361,7 @@ public class GameLogic {
         settingsDialog.setVisible(true);
     }
 
-
-
+  
     // Methods to update the Labels
     // =========================================================================================================
     void updateBossLevel(){
